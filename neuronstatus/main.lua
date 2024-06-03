@@ -1591,8 +1591,12 @@ local function paint(widget)
 	
 	
 			sensorVALUE = sensors.current/10
-			if sensorVALUE == 0 then
-				sensorVALUE = 0.1
+			if linkUP == 0 then
+				sensorVALUE = 0
+			else
+				if sensorVALUE == 0 then
+					sensorVALUE = 0.1
+				end
 			end
 	
 			if titleParam == true then
@@ -1991,11 +1995,8 @@ function neuronstatus.getSensors()
         temp_mcu = 0
         fuel = 0
         mah = 0
-        govmode = "-"
-        fm = "-"
         rssi = linkUP
-		adjsource = 0
-		adjvalue = 0
+
     end
 
 
@@ -2039,6 +2040,10 @@ function neuronstatus.getSensors()
 		fuel = neuronstatus.round(percentLeft,0)
 		
 	else
+		fuel = 0
+	end
+	
+	if linkUP == 0 then
 		fuel = 0
 	end
 
