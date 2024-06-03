@@ -2987,6 +2987,8 @@ end
 
 
 
+armState = false
+idleState = false
 local function wakeup(widget)
     refresh = false
 
@@ -3003,6 +3005,26 @@ local function wakeup(widget)
 	end
 	
 	if linkUP ~= 0 then
+
+
+		if armSwitchParam ~= nil and armSwitchParam:state() == true and armState == false then
+			system.playFile("/scripts/neuronstatus/sounds/triggers/armed.wav")
+			armState = true
+		end
+		if armSwitchParam ~= nil and armSwitchParam:state() == false and armState == true then
+			system.playFile("/scripts/neuronstatus/sounds/triggers/disarmed.wav")
+			armState = false
+		end
+
+		if idleupSwitchParam ~= nil and idleupSwitchParam:state() == true and idleState == false then
+			system.playFile("/scripts/neuronstatus/sounds/triggers/thr-active.wav")
+			idleState = true
+		end
+		if idleupSwitchParam ~= nil and idleupSwitchParam:state() == false and idleState == true then
+			system.playFile("/scripts/neuronstatus/sounds/triggers/thr-hold.wav")
+			idleState = false
+		end
+		
 	
 		 if ((tonumber(os.clock()) - tonumber(linkUPTime)) >= 5) then
 			-- voltage alerts
