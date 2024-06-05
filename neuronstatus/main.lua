@@ -230,7 +230,7 @@ local function configure(widget)
 	triggerpanel = form.addExpansionPanel("Triggers")
 	triggerpanel:open(false) 
 
-    line = form.addLine("Arm switch",triggerpanel)
+    line = triggerpanel:addLine("Arm switch")
     form.addSwitchField(
         line,
         form.getFieldSlots(line)[0],
@@ -242,7 +242,7 @@ local function configure(widget)
         end
     )
 
-    line = form.addLine("Idleup switch",triggerpanel)
+    line = triggerpanel:addLine("Idleup switch")
     form.addSwitchField(
         line,
         form.getFieldSlots(line)[0],
@@ -260,7 +260,7 @@ local function configure(widget)
 	batterypanel:open(false) 
 
     -- CELLS
-    line = form.addLine("Type",batterypanel)
+    line = batterypanel:addLine("Type")
     form.addChoiceField(
         line,
         nil,
@@ -280,7 +280,7 @@ local function configure(widget)
     )
 	
     -- BATTERY CAPACITY
-    line = form.addLine("Capacity",batterypanel)
+    line = batterypanel:addLine("Capacity")
     field =
         form.addNumberField(
         line,
@@ -299,7 +299,7 @@ local function configure(widget)
 
 
     -- BATTERY CELLS
-    line = form.addLine("Cells",batterypanel)
+    line = batterypanel:addLine("Cells")
     field =
         form.addNumberField(
         line,
@@ -319,7 +319,7 @@ local function configure(widget)
 
 
    -- LOW FUEL announce
-    line = form.addLine("Low fuel%",batterypanel)
+    line = batterypanel:addLine("Low fuel%")
     field =
         form.addNumberField(
         line,
@@ -337,7 +337,7 @@ local function configure(widget)
 	field:suffix("%")
 
     -- ALERT ON
-    line = form.addLine("Play alert on",batterypanel)
+    line = batterypanel:addLine("Play alert on")
     form.addChoiceField(
         line,
         nil,
@@ -358,7 +358,7 @@ local function configure(widget)
     )
 
     -- ALERT INTERVAL
-    line = form.addLine("     Interval",batterypanel)
+    line = batterypanel:addLine("     Interval")
     plalrtint = form.addChoiceField(
         line,
         nil,
@@ -377,7 +377,7 @@ local function configure(widget)
 	end	
 
     -- HAPTIC
-    line = form.addLine("     Vibrate",batterypanel)
+    line = batterypanel:addLine("     Vibrate")
     plalrthap = form.addBooleanField(
         line,
         nil,
@@ -397,11 +397,11 @@ local function configure(widget)
 	
 
 	
-	announcepanel = form.addExpansionPanel("Announcements")
+	announcepanel = form.addExpansionPanel("Telemetry Announcements")
 	announcepanel:open(false) 
 	
     -- announce VOLTAGE READING
-    line = form.addLine("Voltage",announcepanel)
+    line = announcepanel:addLine("Voltage")
     form.addSwitchField(
         line,
         form.getFieldSlots(line)[0],
@@ -414,7 +414,7 @@ local function configure(widget)
     )
 
     -- announce RPM READING
-    line = form.addLine("Rpm",announcepanel)
+    line = announcepanel:addLine("Rpm")
     form.addSwitchField(
         line,
         nil,
@@ -427,7 +427,7 @@ local function configure(widget)
     )
 
     -- announce CURRENT READING
-    line = form.addLine("Current",announcepanel)
+    line = announcepanel:addLine("Current")
     form.addSwitchField(
         line,
         nil,
@@ -440,7 +440,7 @@ local function configure(widget)
     )
 
     -- announce FUEL READING
-    line = form.addLine("Fuel",announcepanel)
+    line = announcepanel:addLine("Fuel")
     form.addSwitchField(
         line,
         form.getFieldSlots(line)[0],
@@ -453,7 +453,7 @@ local function configure(widget)
     )
 
     -- announce LQ READING
-    line = form.addLine("LQ",announcepanel)
+    line = announcepanel:addLine("LQ")
     form.addSwitchField(
         line,
         form.getFieldSlots(line)[0],
@@ -466,7 +466,7 @@ local function configure(widget)
     )
 
     -- announce LQ READING
-    line = form.addLine("Temperature",announcepanel)
+    line = announcepanel:addLine("Temperature")
     form.addSwitchField(
         line,
         form.getFieldSlots(line)[0],
@@ -481,7 +481,7 @@ local function configure(widget)
 
 
     -- announce TIMER READING
-    line = form.addLine("Timer",announcepanel)
+    line = announcepanel:addLine("Timer")
     form.addSwitchField(
         line,
         form.getFieldSlots(line)[0],
@@ -499,7 +499,7 @@ local function configure(widget)
 
 
     -- TITLE DISPLAY
-    line = form.addLine("Title",displaypanel)
+    line = displaypanel:addLine("Title")
     form.addBooleanField(
         line,
         nil,
@@ -512,7 +512,7 @@ local function configure(widget)
     )
 
     -- MAX MIN DISPLAY
-    line = form.addLine("Max/Min",displaypanel)
+    line = displaypanel:addLine("Max/Min")
     form.addBooleanField(
         line,
         nil,
@@ -529,7 +529,7 @@ local function configure(widget)
 
 
 
-    line = form.addLine("Temp. Conversion",advpanel)
+    line = advpanel:addLine("Temp. Conversion")
     form.addChoiceField(
         line,
         nil,
@@ -550,7 +550,7 @@ local function configure(widget)
     line = form.addLine("Voltage",advpanel)
 	
     -- LVannounce DISPLAY
-    line = form.addLine("    Sensitivity",advpanel)
+    line = advpanel:addLine("    Sensitivity")
     form.addChoiceField(
         line,
         nil,
@@ -567,7 +567,7 @@ local function configure(widget)
         end
     )
 
-    line = form.addLine("    Sag compensation",advpanel)
+    line = advpanel:addLine("    Sag compensation")
     field =
         form.addNumberField(
         line,
@@ -588,7 +588,7 @@ local function configure(widget)
 
     -- FILTER
     -- MAX MIN DISPLAY
-    line = form.addLine("Telemetry Filtering",advpanel)
+    line = advpanel:addLine("Telemetry Filtering")
     form.addChoiceField(
         line,
         nil,
@@ -606,7 +606,7 @@ local function configure(widget)
     )
 
    -- LVannounce DISPLAY
-    line = form.addLine("announce interval",advpanel)
+    line = advpanel:addLine("announce interval")
     form.addChoiceField(
         line,
         nil,
@@ -1746,23 +1746,26 @@ local function paint(widget)
     -- TIME		
 
 	if linkUP ~= 0 then
-		if armSwitchParam:state() == false then
-			stopTimer = true
-			stopTIME = os.clock()
-			timerNearlyActive = 1
-			theTIME = 0
-		end
-
-		if idleupSwitchParam:state()  then
-			if timerNearlyActive == 1 then
-				timerNearlyActive = 0
-				startTIME = os.clock()
+		if armSwitchParam ~= nil then
+			if armSwitchParam:state() == false then
+				stopTimer = true
+				stopTIME = os.clock()
+				timerNearlyActive = 1
+				theTIME = 0
 			end
-			if startTIME ~= nil then
-				theTIME = os.clock() - startTIME
-			end	
+		end	
+
+		if idleupSwitchParam ~= nil then
+			if idleupSwitchParam:state()  then
+				if timerNearlyActive == 1 then
+					timerNearlyActive = 0
+					startTIME = os.clock()
+				end
+				if startTIME ~= nil then
+					theTIME = os.clock() - startTIME
+				end	
+			end
 		end
-		
 		
 	end
 
@@ -1772,17 +1775,21 @@ local function paint(widget)
     -- big conditional to announce lfTimer if needed
 
     if linkUP ~= 0 then
-        if idleupSwitchParam:state() then
-            if (sensors.fuel <= lowfuelParam and alertonParam == 1 ) then
-				lfTimer = true
-			elseif (sensors.fuel <= lowfuelParam and alertonParam == 2 )then
-                lfTimer = true
-            else
-                lfTimer = false
-            end
-        else
-            lfTimer = false
-        end
+		if idleupSwitchParam ~= nil then
+			if idleupSwitchParam:state() then
+				if (sensors.fuel <= lowfuelParam and alertonParam == 1 ) then
+					lfTimer = true
+				elseif (sensors.fuel <= lowfuelParam and alertonParam == 2 )then
+					lfTimer = true
+				else
+					lfTimer = false
+				end
+			else
+				lfTimer = false
+			end
+		else
+			lfTimer = false
+		end
     else
         lfTimer = false
     end
@@ -1819,17 +1826,21 @@ local function paint(widget)
 	-- LOW VOLTAGE ALERTS
     -- big conditional to announce lvTimer if needed
     if linkUP ~= 0 then
-       if idleupSwitchParam:state() then
-            if (voltageIsLow and alertonParam == 0) then
-                lvTimer = true
-			elseif 	(voltageIsLow and alertonParam == 2) then
-				lvTimer = true
-            else
-                lvTimer = false
-            end
-        else
-            lvTimer = false
-        end
+	   if idleupSwitchParam ~= nil then
+		   if idleupSwitchParam:state() then
+				if (voltageIsLow and alertonParam == 0) then
+					lvTimer = true
+				elseif 	(voltageIsLow and alertonParam == 2) then
+					lvTimer = true
+				else
+					lvTimer = false
+				end
+			else
+				lvTimer = false
+			end
+		else
+				lvTimer = false
+		end
     else
         lvTimer = false
     end
@@ -2952,10 +2963,12 @@ local function event(widget, category, value, x, y)
 	--print("Event received:", category, value, x, y)
 	
 	-- disable menu if armed active
-	if armSwitchParam:state() then
-		if category == EVT_TOUCH then
-			return true
-		end
+	if armSwitchParam ~= nil then
+		if armSwitchParam:state() then
+			if category == EVT_TOUCH then
+				return true
+			end
+		end	
 	end	
 
 	if closingLOGS then
