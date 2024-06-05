@@ -743,7 +743,10 @@ function neuronstatus.getThemeInfo()
     environment = system.getVersion()
     local w, h = lcd.getWindowSize()
 
-    -- first one is unsporrted
+	-- this is just to force height calc to end up on whole numbers to avoid
+	-- scaling issues
+	h = (math.floor((h / 4))*4)
+	w = (math.floor((w / 6))*6)
 
     if
         environment.board == "XES" or environment.board == "X20" or environment.board == "X20S" or
