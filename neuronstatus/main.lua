@@ -95,7 +95,7 @@ local linkUPTime = 0
 
 
 
-
+local tempconvertParamESC = 1
 local miniBoxParam = 0
 local lowvoltagStickParam = 0
 local lowvoltagStickCutoffParam = 70
@@ -273,7 +273,7 @@ local function configure(widget)
 	field:suffix("s") 
 
 
-	batterypanel = form.addExpansionPanel("Battery Configuration")
+	batterypanel = form.addExpansionPanel("Battery configuration")
 	batterypanel:open(false) 
 
     -- CELLS
@@ -414,7 +414,7 @@ local function configure(widget)
 	
 
 	
-	announcepanel = form.addExpansionPanel("Telemetry Announcements")
+	announcepanel = form.addExpansionPanel("Telemetry announcements")
 	announcepanel:open(false) 
 	
     -- announce VOLTAGE READING
@@ -510,7 +510,7 @@ local function configure(widget)
         end
     )
 
-	displaypanel = form.addExpansionPanel("Customise Display")
+	displaypanel = form.addExpansionPanel("Customise display")
 	displaypanel:open(false) 
 
 
@@ -605,7 +605,7 @@ local function configure(widget)
 
     -- FILTER
     -- MAX MIN DISPLAY
-    line = advpanel:addLine("Telemetry Filtering")
+    line = advpanel:addLine("Telemetry filtering")
     form.addChoiceField(
         line,
         nil,
