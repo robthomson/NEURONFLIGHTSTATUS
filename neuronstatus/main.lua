@@ -121,8 +121,8 @@ local lowvoltagsenseParam = 2
 local announceIntervalParam = 30
 local alertonParam = 0
 local calcfuelParam = true
-
-
+local idleupSwitchParam = nil
+local armSwitchParam = nil
 
 local timerWASActive = false
 local motorWasActive = false
@@ -253,7 +253,24 @@ local function configure(widget)
             idleupSwitchParam = value
         end
     )
-    
+ 
+
+    line = triggerpanel:addLine("    Delay before active")
+    field =
+        form.addNumberField(
+        line,
+        nil,
+        5,
+        60,
+        function()
+            return idleupdelayParam
+        end,
+        function(value)
+            idleupdelayParam = value
+        end
+    )
+    field:default(5)
+	field:suffix("s") 
 
 
 	batterypanel = form.addExpansionPanel("Battery Configuration")
@@ -606,7 +623,7 @@ local function configure(widget)
     )
 
    -- LVannounce DISPLAY
-    line = advpanel:addLine("announce interval")
+    line = advpanel:addLine("Announcement interval")
     form.addChoiceField(
         line,
         nil,
@@ -1598,7 +1615,23 @@ local function paint(widget)
 				sensorVALUE = 0
 			else
 				if sensorVALUE == 0 then
-					sensorVALUE = 0.1
+					local fakeC
+					if sensors.rpm > 5 then
+						fakeC = 1
+					elseif sensors.rpm > 50 then
+						fakeC = 2
+					elseif sensors.rpm > 100 then
+						fakeC = 3
+					elseif sensors.rpm > 200 then
+						fakeC = 4
+					elseif sensors.rpm > 500 then
+						fakeC = 5
+					elseif sensors.rpm > 1000 then
+						fakeC = 6
+					else
+						fakeC = math.random(1, 3)/10
+					end
+					sensorVALUE = fakeC
 				end
 			end
 	
@@ -1908,7 +1941,7 @@ function neuronstatus.getSensors()
 		tv = math.random(2100, 2274)
 		voltage = tv
 		temp_esc = math.random(500, 2250)*10
-		rpm = math.random(10, 2250)
+		rpm = 0
 		mah = math.random(0, 10)
 		current = math.random(10, 22)
 		fuel = 0
@@ -1917,6 +1950,17 @@ function neuronstatus.getSensors()
 		adjsource = 0
 		adjvalue = 0
 
+
+
+		if idleupSwitchParam ~= nil and armSwitchParam ~= nil then
+			if idleupSwitchParam:state() == true and armSwitchParam:state() == true then
+					current = math.random(100, 120)
+					rpm = math.random(90, 100)
+			else
+					current = 0
+					rpm = 0			
+			end
+		end
 		
     elseif linkUP ~= 0 then
 	
@@ -2109,7 +2153,8 @@ local function sensorsMAXMIN(sensors)
 
     if linkUP ~= 0 and theTIME ~= nil then
 
-		if  theTIME <= 5 then
+		-- hold back - to early to get a reading
+		if  theTIME <= idleupdelayParam then
 			sensorVoltageMin = 0
 			sensorVoltageMax = 0
 			sensorFuelMin = 0
@@ -2123,11 +2168,19 @@ local function sensorsMAXMIN(sensors)
 			sensorTempESCMin = 0
 			sensorTempESCMax = 0
 		end
+
+
+		-- prob put in a screen/audio alert for initialising
+		if theTIME >= 1 and theTIME < idleupdelayParam then
+			
+		end
 	
-        if theTIME > 5 then
+        if theTIME >= idleupdelayParam  then
+	
+			local idleupdelayOFFSET = 2
 
 
-			if theTIME >= 5 and theTIME <= 10 then
+			if theTIME >= idleupdelayParam and theTIME <= (idleupdelayParam + idleupdelayOFFSET ) then
 				sensorVoltageMin = sensors.voltage
 				sensorVoltageMax = sensors.voltage
 				sensorFuelMin = sensors.fuel
@@ -2148,8 +2201,8 @@ local function sensorsMAXMIN(sensors)
 				motorNearlyActive = 0
 			end
 			
-
-			if theTIME >= 10 and idleupSwitchParam:state() == true then
+			
+			if theTIME >= (idleupdelayParam + idleupdelayOFFSET) and idleupSwitchParam:state() == true then
 
 				if sensors.voltage < sensorVoltageMin then
 					sensorVoltageMin = sensors.voltage
@@ -2577,29 +2630,30 @@ end
 
 
 local function read()
-		btypeParam = storage.read("btype")
-		capacityParam = storage.read("capacity")
-		cellsParam = storage.read("cells")
-		lowfuelParam = storage.read("lowfuel")
-		alertonParam = storage.read("alerton")
-		alertintParam = storage.read("alertint")
-		alrthptParam = storage.read("alrthptc")		
-		announceVoltageSwitchParam = storage.read("announceswitchvltg")	
-		announceRPMSwitchParam = storage.read("announceswitchrpm")
-		announceCurrentSwitchParam = storage.read("announceswitchcrnt")
-		announceFuelSwitchParam = storage.read("announceswitchfuel")		
-		announceLQSwitchParam = storage.read("announceswitchlq")
-		announceESCSwitchParam = storage.read("announceswitchesc")
-		announceTimerSwitchParam = storage.read("announceswitchtmr")
-		titleParam = storage.read("title")		
-		maxminParam = storage.read("maxmin")
-		tempconvertParamESC = storage.read("tempconvertesc")		
-		lowvoltagsenseParam = storage.read("lvsense")
-		sagParam = storage.read("sag")	
-		filteringParam = storage.read("filtering")		
-		announceIntervalParam = storage.read("announceint")		
-		armSwitchParam = storage.read("armswitch")
-		idleupSwitchParam = storage.read("idleupswitch")
+		btypeParam = storage.read("mem1")
+		capacityParam = storage.read("mem2")
+		cellsParam = storage.read("mem3")
+		lowfuelParam = storage.read("mem4")
+		alertonParam = storage.read("mem5")
+		alertintParam = storage.read("mem6")
+		alrthptParam = storage.read("mem7")		
+		announceVoltageSwitchParam = storage.read("mem8")	
+		announceRPMSwitchParam = storage.read("mem9")
+		announceCurrentSwitchParam = storage.read("mem10")
+		announceFuelSwitchParam = storage.read("mem11")		
+		announceLQSwitchParam = storage.read("mem12")
+		announceESCSwitchParam = storage.read("mem13")
+		announceTimerSwitchParam = storage.read("mem14")
+		titleParam = storage.read("mem15")		
+		maxminParam = storage.read("mem16")
+		tempconvertParamESC = storage.read("mem17")		
+		lowvoltagsenseParam = storage.read("mem18")
+		sagParam = storage.read("mem19")	
+		filteringParam = storage.read("mem20")		
+		announceIntervalParam = storage.read("mem21")		
+		armSwitchParam = storage.read("mem22")
+		idleupSwitchParam = storage.read("mem23")
+		idleupdelayParam = storage.read("mem24")		
 
 		neuronstatus.resetALL()
 		updateFILTERING()		
@@ -2608,29 +2662,30 @@ end
 local function write()
 
 
-		storage.write("btype", btypeParam)
-		storage.write("capacity", capacityParam)
-		storage.write("cells", cellsParam)
-		storage.write("lowfuel", lowfuelParam)
-		storage.write("alerton",alertonParam)
-		storage.write("alertint", alertintParam)
-		storage.write("alrthptc", alrthptParam)
-		storage.write("announceswitchvltg", announceVoltageSwitchParam)
-		storage.write("announceswitchrpm",announceRPMSwitchParam)
-		storage.write("announceswitchcrnt",announceCurrentSwitchParam)
-		storage.write("announceswitchfuel",announceFuelSwitchParam)		
-		storage.write("announceswitchlq",announceLQSwitchParam)		
-		storage.write("announceswitchesc",announceESCSwitchParam)		
-		storage.write("announceswitchtmr",announceTimerSwitchParam)	
-		storage.write("title", titleParam)
-		storage.write("maxmin", maxminParam)
-		storage.write("tempconvertesc",tempconvertParamESC)
-		storage.write("lvsense",lowvoltagsenseParam)
-		storage.write("sag",sagParam)
-		storage.write("filtering",filteringParam)
-		storage.write("announceint",announceIntervalParam)
-		storage.write("armswitch",armSwitchParam)
-		storage.write("idleupswitch",idleupSwitchParam)
+		storage.write("mem1", btypeParam)
+		storage.write("mem2", capacityParam)
+		storage.write("mem3", cellsParam)
+		storage.write("mem4", lowfuelParam)
+		storage.write("mem5",alertonParam)
+		storage.write("mem6", alertintParam)
+		storage.write("mem7", alrthptParam)
+		storage.write("mem8", announceVoltageSwitchParam)
+		storage.write("mem9",announceRPMSwitchParam)
+		storage.write("mem10",announceCurrentSwitchParam)
+		storage.write("mem11",announceFuelSwitchParam)		
+		storage.write("mem12",announceLQSwitchParam)		
+		storage.write("mem13",announceESCSwitchParam)		
+		storage.write("mem14",announceTimerSwitchParam)	
+		storage.write("mem15", titleParam)
+		storage.write("mem16", maxminParam)
+		storage.write("mem17",tempconvertParamESC)
+		storage.write("mem18",lowvoltagsenseParam)
+		storage.write("mem19",sagParam)
+		storage.write("mem20",filteringParam)
+		storage.write("mem21",announceIntervalParam)
+		storage.write("mem22",armSwitchParam)
+		storage.write("mem23",idleupSwitchParam)
+		storage.write("mem24",idleupdelayParam)
 		
 		
 		updateFILTERING()		
@@ -2965,14 +3020,6 @@ local function event(widget, category, value, x, y)
 
 	--print("Event received:", category, value, x, y)
 	
-	-- disable menu if armed active
-	if armSwitchParam ~= nil then
-		if armSwitchParam:state() then
-			if category == EVT_TOUCH then
-				return true
-			end
-		end	
-	end	
 
 	if closingLOGS then
 		if category == EVT_TOUCH and (value == 16640 or value == 16641)  then				
