@@ -1934,9 +1934,11 @@ function neuronstatus.getSensors()
         return oldsensors
     end
 
+	lcd.resetFocusTimeout()	
+
     if environment.simulation == true then
 	
-		lcd.resetFocusTimeout()	
+
 
 		tv = math.random(2100, 2274)
 		voltage = tv
@@ -2151,7 +2153,7 @@ end
 local function sensorsMAXMIN(sensors)
 
 
-    if linkUP ~= 0 and theTIME ~= nil then
+    if linkUP ~= 0 and theTIME ~= nil and theTIME ~= nil and idleupdelayParam ~= nil then
 
 		-- hold back - to early to get a reading
 		if  theTIME <= idleupdelayParam then
