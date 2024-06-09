@@ -778,6 +778,7 @@ function neuronstatus.getThemeInfo()
             fullBoxW = 262,
             fullBoxH = h / 2,
             smallBoxSensortextOFFSET = -5,
+			title_fm = "FLIGHT MODE",
             title_voltage = "VOLTAGE",
             title_fuel = "FUEL",
             title_rpm = "RPM",
@@ -808,6 +809,7 @@ function neuronstatus.getThemeInfo()
             fullBoxW = 158,
             fullBoxH = 97,
             smallBoxSensortextOFFSET = -8,
+			title_fm = "FLIGHT MODE",			
             title_voltage = "VOLTAGE",
             title_fuel = "FUEL",
             title_rpm = "RPM",
@@ -838,6 +840,7 @@ function neuronstatus.getThemeInfo()
             fullBoxW = 210,
             fullBoxH = 120,
             smallBoxSensortextOFFSET = -10,
+			title_fm = "FLIGHT MODE",			
             title_voltage = "VOLTAGE",
             title_fuel = "FUEL",
             title_rpm = "RPM",
@@ -868,6 +871,7 @@ function neuronstatus.getThemeInfo()
             fullBoxW = 158,
             fullBoxH = 96,
             smallBoxSensortextOFFSET = -10,
+			title_fm = "FLIGHT MODE",			
             title_voltage = "VOLTAGE",
             title_fuel = "FUEL",
             title_rpm = "RPM",
@@ -898,6 +902,7 @@ function neuronstatus.getThemeInfo()
             fullBoxW = 158,
             fullBoxH = 79,
             smallBoxSensortextOFFSET = -10,
+			title_fm = "FLIGHT MODE",			
             title_voltage = "VOLTAGE",
             title_fuel = "FUEL",
             title_rpm = "RPM",
@@ -1478,7 +1483,7 @@ local function paint(widget)
 		posX = 0
 		posY = theme.colSpacing
 		if gfx_model ~= nil then
-			telemetryBoxImage(posX,posY,boxW,boxH,gfx_model)
+			telemetryBoxImage(posX,posY,boxW,boxHs,gfx_model)
 		else
 			telemetryBoxImage(posX,posY,boxW,boxH,gfx_default)
 		end
@@ -1522,6 +1527,29 @@ local function paint(widget)
 
 			telemetryBox(posX,posY,boxW,boxH,sensorTITLE,sensorVALUE,sensorUNIT,smallBOX,sensorWARN,sensorMIN,sensorMAX)
 		end
+
+		--GOV MODE
+		posX = 0
+		posY =  boxHs+(theme.colSpacing*2)
+		sensorUNIT = ""
+		sensorWARN = false
+		smallBOX = true		
+		sensorMIN = nil
+		sensorMAX = nil
+
+
+		str = sensors.fm
+		sensorTITLE = theme.title_fm			
+
+		sensorVALUE = str
+
+		if titleParam ~= true then
+			sensorTITLE = ""		
+		end	
+
+	    telemetryBox(posX,posY,boxW,boxHs,sensorTITLE,sensorVALUE,sensorUNIT,smallBOX,sensorWARN,sensorMIN,sensorMAX)
+
+
 
 		--RPM
 		if sensors.rpm ~= nil then
@@ -2090,7 +2118,26 @@ function neuronstatus.getSensors()
 
     rssi = neuronstatus.kalmanRSSI(rssi, oldsensors.rssi)
     rssi = neuronstatus.round(rssi, 0)
-	
+
+
+	-- intercept flight mode governor 
+	if armSwitchParam ~= nil or idleupSwitchParam ~= nil then
+
+			if armSwitchParam:state() == true then
+					 fm = "ARMED"			
+			else
+					 fm = "DISARMED"			
+			end
+			
+			if armSwitchParam:state() == true then
+				if idleupSwitchParam:state() == true then
+						 fm = "ACTIVE"	
+				else
+						 fm = "THR-OFF"				
+				end
+
+			end
+	end	
 	
 	--calc fuel as this is based on pack capacity
 	if capacityParam ~= nil then
