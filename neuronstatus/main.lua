@@ -19,6 +19,7 @@ local lvannounceTimer = false
 local lvannounceTimerStart
 local lvaudioannounceCounter = 0
 local lvAudioAlertCounter = 0
+local timerAlarmPlay = true
 
 local lfTimer = false
 local lfTimerStart
@@ -112,6 +113,8 @@ local alertonParam = 0
 local calcfuelParam = true
 local idleupSwitchParam = nil
 local armSwitchParam = nil
+local timeralarmVibrateParam = true
+local timeralarmParam = 210
 
 local timerWASActive = false
 local motorWasActive = false
@@ -331,6 +334,71 @@ local function configure(widget)
     else
         plalrthap:enable(true)
     end
+
+    timerpanel = form.addExpansionPanel("Timer configuration")
+    timerpanel:open(false)
+
+
+	timeTable = {
+					{"Disabled", 0},
+					{"00:30", 30},
+					{"01:00", 60},
+					{"01:30", 90},
+					{"02:00", 120},
+					{"02:30", 150},
+					{"03:00", 180},
+					{"03:30", 210},
+					{"04:00", 240},
+					{"04:30", 270},
+					{"05:00", 300},
+					{"05:30", 330},
+					{"06:00", 360},
+					{"06:30", 390},
+					{"07:00", 420},
+					{"07:30", 450},					
+					{"08:00", 480},
+					{"08:30", 510},
+					{"09:00", 540},
+					{"09:30", 570},
+					{"10:00", 600},
+					{"10:30", 630},
+					{"11:00", 660},	
+					{"11:30", 690},
+					{"12:00", 720},
+					{"12:30", 750},
+					{"13:00", 780},
+					{"13:30", 810},					
+					{"14:00", 840},	
+					{"14:30", 870},	
+					{"15:00", 900},						
+					{"15:30", 930},
+					{"16:00", 960},
+					{"16:30", 990},
+					{"17:00", 1020},
+					{"17:30", 1050},
+					{"18:00", 1080},
+					{"18:30", 1110},
+					{"19:00", 1140},
+					{"19:30", 1170},
+					{"20:00", 1200},							
+				}
+
+
+	line = timerpanel:addLine("Play alarm at")
+     form.addChoiceField(line, nil, timeTable, function()
+        return timeralarmParam
+    end, function(newValue)
+        timeralarmParam = newValue
+    end)
+
+
+    line = timerpanel:addLine("Vibrate")
+    form.addBooleanField(line, nil, function()
+        return timeralarmVibrateParam
+    end, function(newValue)
+        timeralarmVibrateParam= newValue
+    end)
+
 
     announcepanel = form.addExpansionPanel("Telemetry announcements")
     announcepanel:open(false)
@@ -1688,7 +1756,6 @@ local function paint(widget)
             if c == 1 then
                 posX = 0
                 posY = theme.colSpacing
-                print(layoutBox1Param)
                 sensorTGT = layoutBox1Param
             end
             if c == 2 then
@@ -2785,6 +2852,8 @@ local function read()
     layoutBox4Param = storage.read("mem28")
     layoutBox5Param = storage.read("mem29")
     layoutBox6Param = storage.read("mem30")
+	timeralarmVibrateParam = storage.read("mem31")
+	timeralarmParam = storage.read("mem32")
 
     if layoutBox1Param == nil then
         layoutBox1Param = 11
@@ -2841,7 +2910,8 @@ local function write()
     storage.write("mem28", layoutBox4Param)
     storage.write("mem29", layoutBox5Param)
     storage.write("mem30", layoutBox6Param)
-
+    storage.write("mem31", timeralarmVibrateParam)
+	storage.write("mem32", timeralarmParam)
     updateFILTERING()
 end
 
@@ -2973,6 +3043,44 @@ function neuronstatus.playESC(widget)
             end
         end
     end
+end
+
+
+
+function neuronstatus.playTIMERALARM(widget)
+	if theTIME ~= nil and timeralarmParam ~= nil and timeralarmParam ~= 0 then
+		
+		-- reset timer Delay
+		if theTIME > timeralarmParam + 2 then
+			timerAlarmPlay = true
+		end
+		-- trigger first timer
+		if timerAlarmPlay == true then
+			if theTIME >= timeralarmParam and theTIME <= timeralarmParam + 1 then
+
+			
+				system.playFile("/scripts/neuronstatus/sounds/alerts/beep.wav")
+				
+				hours = string.format("%02.f", math.floor(theTIME / 3600))
+				mins = string.format("%02.f", math.floor(theTIME / 60 - (hours * 60)))
+				secs = string.format("%02.f", math.floor(theTIME - hours * 3600 - mins * 60))			
+
+				system.playFile("/scripts/neuronstatus/sounds/alerts/timer.wav")
+				if mins ~= "00" then
+					system.playNumber(mins, UNIT_MINUTE, 2)
+				end
+				system.playNumber(secs, UNIT_SECOND, 2)
+				
+				if timeralarmVibrateParam == true then
+				    system.playHaptic("- - -")
+				end
+				
+				timerAlarmPlay = false
+			end
+		end
+
+
+	end
 end
 
 function neuronstatus.playTIMER(widget)
@@ -3254,6 +3362,9 @@ local function wakeup(widget)
             neuronstatus.playESC(widget)
             -- timer
             neuronstatus.playTIMER(widget)
+			
+			-- timer alarm
+			neuronstatus.playTIMERALARM(widget)
 
         else
             adjJUSTUP = true
