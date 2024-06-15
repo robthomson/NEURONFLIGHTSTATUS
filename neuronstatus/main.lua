@@ -679,7 +679,7 @@ function neuronstatus.getThemeInfo()
     h = (math.floor((h / 4)) * 4)
     w = (math.floor((w / 6)) * 6)
 
-    if environment.board == "XES" or environment.board == "X20" or environment.board == "X20S" or environment.board == "X20PRO" or environment.board == "X20PROAW" or environment.board == "X20R" or
+    if environment.board == "XES" or environment.board == "XE" or environment.board == "X20" or environment.board == "X20S" or environment.board == "X20PRO" or environment.board == "X20PROAW" or environment.board == "X20R" or
         environment.board == "X20RS" then
         ret = {
             supportedRADIO = true,
