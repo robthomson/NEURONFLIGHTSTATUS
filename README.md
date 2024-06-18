@@ -8,6 +8,7 @@ Fully supported is:
 
 - FPORT
 - S.PORT
+- FBUS
 
 ---
 
