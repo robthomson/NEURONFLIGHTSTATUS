@@ -1,3 +1,10 @@
+
+local WIDGET_NAME = "Neuron Flight Status"
+local WIDGET_KEY = "zxkss"
+local WIDGET_DIR = "/scripts/neuronstatus/"
+
+
+
 local environment = system.getVersion()
 local oldsensors = {"refresh", "voltage", "rpm", "current", "temp_esc", "fuel", "mah", "rssi"}
 
@@ -183,8 +190,8 @@ local layoutBox6Param = 6 -- RPM
 
 local function create(widget)
     gfx_model = lcd.loadBitmap(model.bitmap())
-    gfx_default = lcd.loadBitmap("/scripts/neuronstatus/gfx/default.png")
-    gfx_close = lcd.loadBitmap("/scripts/neuronstatus/gfx/close.png")
+    gfx_default = lcd.loadBitmap(WIDGET_DIR .. "gfx/default.png")
+    gfx_close = lcd.loadBitmap(WIDGET_DIR .. "gfx/close.png")
     rssiSensor = neuronstatus.getRssiSensor()
 
     if tonumber(neuronstatus.sensorMakeNumber(environment.version)) < 152 then
@@ -2066,7 +2073,7 @@ local function paint(widget)
         if (tonumber(os.clock()) - tonumber(lfAudioAlertCounter)) >= alertintParam then
             lfAudioAlertCounter = os.clock()
 
-            system.playFile("/scripts/neuronstatus/sounds/alerts/lowfuel.wav")
+            system.playFile(WIDGET_DIR .. "sounds/alerts/lowfuel.wav")
 
             if alrthptParam == true then
                 system.playHaptic("- . -")
@@ -2115,7 +2122,7 @@ local function paint(widget)
             if (tonumber(os.clock()) - tonumber(lvAudioAlertCounter)) >= alertintParam then
                 lvAudioAlertCounter = os.clock()
 
-                system.playFile("/scripts/neuronstatus/sounds/alerts/lowvoltage.wav")
+                system.playFile(WIDGET_DIR .. "sounds/alerts/lowvoltage.wav")
                 if alrthptParam == true then
                     system.playHaptic("- . -")
                 end
@@ -2491,7 +2498,7 @@ local function sensorsMAXMIN(sensors)
             name = string.gsub(model.name(), "%s+", "_")
             name = string.gsub(name, "%W", "_")
 
-            file = "/scripts/neuronstatus/logs/" .. name .. ".log"
+            file = WIDGET_DIR .. "logs/" .. name .. ".log"
             f = io.open(file, 'w')
             f:write("")
             io.close(f)
@@ -2792,7 +2799,7 @@ function neuronstatus.readHistory()
 
     name = string.gsub(model.name(), "%s+", "_")
     name = string.gsub(name, "%W", "_")
-    file = "/scripts/neuronstatus/logs/" .. name .. ".log"
+    file = WIDGET_DIR .. "logs/" .. name .. ".log"
     local f = io.open(file, "rb")
 
     if f ~= nil then
@@ -2975,7 +2982,7 @@ function neuronstatus.playLQ(widget)
                         lqannounceTimerStart = os.time()
                         lqaudioannounceCounter = os.clock()
                         -- print ("Play LQ Alert (first)")
-                        system.playFile("/scripts/neuronstatus/sounds/alerts/lq.wav")
+                        system.playFile(WIDGET_DIR .. "sounds/alerts/lq.wav")
                         system.playNumber(sensors.rssi, UNIT_PERCENT, 2)
                         lqDoneFirst = true
                     end
@@ -2988,7 +2995,7 @@ function neuronstatus.playLQ(widget)
                         if ((tonumber(os.clock()) - tonumber(lqaudioannounceCounter)) >= announceIntervalParam) then
                             lqaudioannounceCounter = os.clock()
                             -- print ("Play LQ Alert (repeat)")
-                            system.playFile("/scripts/neuronstatus/sounds/alerts/lq.wav")
+                            system.playFile(WIDGET_DIR .. "sounds/alerts/lq.wav")
                             system.playNumber(sensors.rssi, UNIT_PERCENT, 2)
                         end
                     end
@@ -3019,7 +3026,7 @@ function neuronstatus.playESC(widget)
                         escannounceTimerStart = os.time()
                         escaudioannounceCounter = os.clock()
                         -- print ("Playing ESC (first)")
-                        system.playFile("/scripts/neuronstatus/sounds/alerts/esc.wav")
+                        system.playFile(WIDGET_DIR .. "sounds/alerts/esc.wav")
                         system.playNumber(sensors.temp_esc / 100, UNIT_DEGREE, 2)
                         escDoneFirst = true
                     end
@@ -3032,7 +3039,7 @@ function neuronstatus.playESC(widget)
                         if ((tonumber(os.clock()) - tonumber(escaudioannounceCounter)) >= announceIntervalParam) then
                             escaudioannounceCounter = os.clock()
                             -- print ("Playing ESC (repeat)")
-                            system.playFile("/scripts/neuronstatus/sounds/alerts/esc.wav")
+                            system.playFile(WIDGET_DIR .. "sounds/alerts/esc.wav")
                             system.playNumber(sensors.temp_esc / 100, UNIT_DEGREE, 2)
                         end
                     end
@@ -3059,13 +3066,13 @@ function neuronstatus.playTIMERALARM(widget)
 			if theTIME >= timeralarmParam and theTIME <= timeralarmParam + 1 then
 
 			
-				system.playFile("/scripts/neuronstatus/sounds/alerts/beep.wav")
+				system.playFile(WIDGET_DIR .. "sounds/alerts/beep.wav")
 				
 				hours = string.format("%02.f", math.floor(theTIME / 3600))
 				mins = string.format("%02.f", math.floor(theTIME / 60 - (hours * 60)))
 				secs = string.format("%02.f", math.floor(theTIME - hours * 3600 - mins * 60))			
 
-				system.playFile("/scripts/neuronstatus/sounds/alerts/timer.wav")
+				system.playFile(WIDGET_DIR .. "sounds/alerts/timer.wav")
 				if mins ~= "00" then
 					system.playNumber(mins, UNIT_MINUTE, 2)
 				end
@@ -3164,7 +3171,7 @@ function neuronstatus.playFuel(widget)
                         fuelannounceTimerStart = os.time()
                         fuelaudioannounceCounter = os.clock()
                         -- print("Play fuel alert (first)")
-                        system.playFile("/scripts/neuronstatus/sounds/alerts/fuel.wav")
+                        system.playFile(WIDGET_DIR .. "sounds/alerts/fuel.wav")
                         system.playNumber(sensors.fuel, UNIT_PERCENT, 2)
                         fuelDoneFirst = true
                     end
@@ -3177,7 +3184,7 @@ function neuronstatus.playFuel(widget)
                         if ((tonumber(os.clock()) - tonumber(fuelaudioannounceCounter)) >= announceIntervalParam) then
                             fuelaudioannounceCounter = os.clock()
                             -- print("Play fuel alert (repeat)")
-                            system.playFile("/scripts/neuronstatus/sounds/alerts/fuel.wav")
+                            system.playFile(WIDGET_DIR .. "sounds/alerts/fuel.wav")
                             system.playNumber(sensors.fuel, UNIT_PERCENT, 2)
 
                         end
@@ -3251,7 +3258,7 @@ function neuronstatus.playVoltage(widget)
                         lvannounceTimerStart = os.time()
                         lvaudioannounceCounter = os.clock()
                         -- print("Play voltage alert (first)")
-                        -- system.playFile("/scripts/neuronstatus/sounds/alerts/voltage.wav")						
+                        -- system.playFile(WIDGET_DIR .. "sounds/alerts/voltage.wav")						
                         system.playNumber(sensors.voltage / 100, 2, 2)
                         voltageDoneFirst = true
                     end
@@ -3264,7 +3271,7 @@ function neuronstatus.playVoltage(widget)
                         if ((tonumber(os.clock()) - tonumber(lvaudioannounceCounter)) >= announceIntervalParam) then
                             lvaudioannounceCounter = os.clock()
                             -- print("Play voltage alert (repeat)")
-                            -- system.playFile("/scripts/neuronstatus/sounds/alerts/voltage.wav")								
+                            -- system.playFile(WIDGET_DIR .. "sounds/alerts/voltage.wav")								
                             system.playNumber(sensors.voltage / 100, 2, 2)
                         end
                     end
@@ -3330,20 +3337,20 @@ local function wakeup(widget)
     if linkUP ~= 0 then
 
         if armSwitchParam ~= nil and armSwitchParam:state() == true and armState == false then
-            system.playFile("/scripts/neuronstatus/sounds/triggers/armed.wav")
+            system.playFile(WIDGET_DIR .. "sounds/triggers/armed.wav")
             armState = true
         end
         if armSwitchParam ~= nil and armSwitchParam:state() == false and armState == true then
-            system.playFile("/scripts/neuronstatus/sounds/triggers/disarmed.wav")
+            system.playFile(WIDGET_DIR .. "sounds/triggers/disarmed.wav")
             armState = false
         end
 
         if idleupSwitchParam ~= nil and idleupSwitchParam:state() == true and idleState == false then
-            system.playFile("/scripts/neuronstatus/sounds/triggers/thr-active.wav")
+            system.playFile(WIDGET_DIR .. "sounds/triggers/thr-active.wav")
             idleState = true
         end
         if idleupSwitchParam ~= nil and idleupSwitchParam:state() == false and idleState == true then
-            system.playFile("/scripts/neuronstatus/sounds/triggers/thr-hold.wav")
+            system.playFile(WIDGET_DIR .. "sounds/triggers/thr-hold.wav")
             idleState = false
         end
 
@@ -3393,8 +3400,8 @@ end
 
 local function init()
     system.registerWidget({
-        key = "zxkss",
-        name = "Neuron Flight Status",
+        key = WIDGET_KEY,
+        name = WIDGET_NAME,
         create = create,
         configure = configure,
         paint = paint,
