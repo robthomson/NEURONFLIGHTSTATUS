@@ -1,9 +1,6 @@
-
 local WIDGET_NAME = "Neuron Flight Status"
 local WIDGET_KEY = "zxkss"
 local WIDGET_DIR = "/scripts/neuronstatus/"
-
-
 
 local environment = system.getVersion()
 local oldsensors = {"refresh", "voltage", "rpm", "current", "temp_esc", "fuel", "mah", "rssi"}
@@ -345,67 +342,26 @@ local function configure(widget)
     timerpanel = form.addExpansionPanel("Timer configuration")
     timerpanel:open(false)
 
+    timeTable = {
+        {"Disabled", 0}, {"00:30", 30}, {"01:00", 60}, {"01:30", 90}, {"02:00", 120}, {"02:30", 150}, {"03:00", 180}, {"03:30", 210}, {"04:00", 240}, {"04:30", 270}, {"05:00", 300}, {"05:30", 330},
+        {"06:00", 360}, {"06:30", 390}, {"07:00", 420}, {"07:30", 450}, {"08:00", 480}, {"08:30", 510}, {"09:00", 540}, {"09:30", 570}, {"10:00", 600}, {"10:30", 630}, {"11:00", 660}, {"11:30", 690},
+        {"12:00", 720}, {"12:30", 750}, {"13:00", 780}, {"13:30", 810}, {"14:00", 840}, {"14:30", 870}, {"15:00", 900}, {"15:30", 930}, {"16:00", 960}, {"16:30", 990}, {"17:00", 1020},
+        {"17:30", 1050}, {"18:00", 1080}, {"18:30", 1110}, {"19:00", 1140}, {"19:30", 1170}, {"20:00", 1200}
+    }
 
-	timeTable = {
-					{"Disabled", 0},
-					{"00:30", 30},
-					{"01:00", 60},
-					{"01:30", 90},
-					{"02:00", 120},
-					{"02:30", 150},
-					{"03:00", 180},
-					{"03:30", 210},
-					{"04:00", 240},
-					{"04:30", 270},
-					{"05:00", 300},
-					{"05:30", 330},
-					{"06:00", 360},
-					{"06:30", 390},
-					{"07:00", 420},
-					{"07:30", 450},					
-					{"08:00", 480},
-					{"08:30", 510},
-					{"09:00", 540},
-					{"09:30", 570},
-					{"10:00", 600},
-					{"10:30", 630},
-					{"11:00", 660},	
-					{"11:30", 690},
-					{"12:00", 720},
-					{"12:30", 750},
-					{"13:00", 780},
-					{"13:30", 810},					
-					{"14:00", 840},	
-					{"14:30", 870},	
-					{"15:00", 900},						
-					{"15:30", 930},
-					{"16:00", 960},
-					{"16:30", 990},
-					{"17:00", 1020},
-					{"17:30", 1050},
-					{"18:00", 1080},
-					{"18:30", 1110},
-					{"19:00", 1140},
-					{"19:30", 1170},
-					{"20:00", 1200},							
-				}
-
-
-	line = timerpanel:addLine("Play alarm at")
-     form.addChoiceField(line, nil, timeTable, function()
+    line = timerpanel:addLine("Play alarm at")
+    form.addChoiceField(line, nil, timeTable, function()
         return timeralarmParam
     end, function(newValue)
         timeralarmParam = newValue
     end)
 
-
     line = timerpanel:addLine("Vibrate")
     form.addBooleanField(line, nil, function()
         return timeralarmVibrateParam
     end, function(newValue)
-        timeralarmVibrateParam= newValue
+        timeralarmVibrateParam = newValue
     end)
-
 
     announcepanel = form.addExpansionPanel("Telemetry announcements")
     announcepanel:open(false)
@@ -686,8 +642,8 @@ function neuronstatus.getThemeInfo()
     h = (math.floor((h / 4)) * 4)
     w = (math.floor((w / 6)) * 6)
 
-    if environment.board == "XES" or environment.board == "XE" or environment.board == "X20" or environment.board == "X20S" or environment.board == "X20PRO" or environment.board == "X20PROAW" or environment.board == "X20R" or
-        environment.board == "X20RS" then
+    if environment.board == "XES" or environment.board == "XE" or environment.board == "X20" or environment.board == "X20S" or environment.board == "X20PRO" or environment.board == "X20PROAW" or
+        environment.board == "X20R" or environment.board == "X20RS" then
         ret = {
             supportedRADIO = true,
             colSpacing = 4,
@@ -1114,114 +1070,115 @@ function neuronstatus.logsBOX()
 
     c = 0
 
-    for index, value in ipairs(history) do
+    if history ~= nil then
+        for index, value in ipairs(history) do
 
-        if value ~= nil then
-            if value ~= "" and value ~= nil then
-                rowH = c * boxTh
+            if value ~= nil then
+                if value ~= "" and value ~= nil then
+                    rowH = c * boxTh
 
-                local rowData = neuronstatus.explode(value, ",")
+                    local rowData = neuronstatus.explode(value, ",")
 
-                --[[ rowData is a csv string as follows
+                    --[[ rowData is a csv string as follows
 				
 						theTIME,sensorVoltageMin,sensorVoltageMax,sensorFuelMin,sensorFuelMax,
 						sensorRPMMin,sensorRPMMax,sensorCurrentMin,sensorCurrentMax,sensorRSSIMin,
 						sensorRSSIMax,sensorTempMCUMin,sensorTempMCUMax,sensorTempESCMin,sensorTempESCMax	
 				]] --
-                -- loop of rowData and extract each value bases on idx
-                if rowData ~= nil then
+                    -- loop of rowData and extract each value bases on idx
+                    if rowData ~= nil then
 
-                    for idx, snsr in pairs(rowData) do
+                        for idx, snsr in pairs(rowData) do
 
-                        snsr = snsr:gsub("%s+", "")
+                            snsr = snsr:gsub("%s+", "")
 
-                        if snsr ~= nil and snsr ~= "" then
-                            -- time
-                            if idx == 1 and theme.logsCOL1w ~= 0 then
-                                str = neuronstatus.SecondsToClockAlt(snsr)
-                                tsizeW, tsizeH = lcd.getTextSize(str)
-                                lcd.drawText(col1x + (theme.logsCOL1w / 2) - (tsizeW / 2), boxTy + tsizeH / 2 + (boxTh * 2) + rowH, str)
-                            end
-                            -- voltagemin
-                            if idx == 2 then
-                                vstr = snsr
-                            end
-                            -- voltagemax
-                            if idx == 3 and theme.logsCOL2w ~= 0 then
-                                str = neuronstatus.round(vstr / 100, 1) .. 'v / ' .. neuronstatus.round(snsr / 100, 1) .. 'v'
-                                tsizeW, tsizeH = lcd.getTextSize(str)
-                                lcd.drawText(col2x + (theme.logsCOL2w / 2) - (tsizeW / 2), boxTy + tsizeH / 2 + (boxTh * 2) + rowH, str)
-                            end
-                            -- fuelmin
-                            if idx == 4 then
-                                local logFUELmin = snsr
-                            end
-                            -- fuelmax
-                            if idx == 5 then
-                                local logFUELmax = snsr
-                            end
-                            -- rpmmin
-                            if idx == 6 then
-                                rstr = snsr
-                            end
-                            -- rpmmax
-                            if idx == 7 and theme.logsCOL4w ~= 0 then
-                                str = rstr .. 'rpm / ' .. snsr .. 'rpm'
-                                tsizeW, tsizeH = lcd.getTextSize(str)
-                                lcd.drawText(col4x + (theme.logsCOL4w / 2) - (tsizeW / 2), boxTy + tsizeH / 2 + (boxTh * 2) + rowH, str)
-                            end
-                            -- currentmin
-                            if idx == 8 then
-                                cstr = snsr
-                            end
-                            -- currentmax
-                            if idx == 9 and theme.logsCOL3w ~= 0 then
-                                str = neuronstatus.round(cstr / 10, 1) .. 'A / ' .. neuronstatus.round(snsr / 10, 1) .. 'A'
-                                tsizeW, tsizeH = lcd.getTextSize(str)
-                                lcd.drawText(col3x + (theme.logsCOL3w / 2) - (tsizeW / 2), boxTy + tsizeH / 2 + (boxTh * 2) + rowH, str)
-                            end
-                            -- rssimin
-                            if idx == 10 then
-                                lqstr = snsr
+                            if snsr ~= nil and snsr ~= "" then
+                                -- time
+                                if idx == 1 and theme.logsCOL1w ~= 0 then
+                                    str = neuronstatus.SecondsToClockAlt(snsr)
+                                    tsizeW, tsizeH = lcd.getTextSize(str)
+                                    lcd.drawText(col1x + (theme.logsCOL1w / 2) - (tsizeW / 2), boxTy + tsizeH / 2 + (boxTh * 2) + rowH, str)
+                                end
+                                -- voltagemin
+                                if idx == 2 then
+                                    vstr = snsr
+                                end
+                                -- voltagemax
+                                if idx == 3 and theme.logsCOL2w ~= 0 then
+                                    str = neuronstatus.round(vstr / 100, 1) .. 'v / ' .. neuronstatus.round(snsr / 100, 1) .. 'v'
+                                    tsizeW, tsizeH = lcd.getTextSize(str)
+                                    lcd.drawText(col2x + (theme.logsCOL2w / 2) - (tsizeW / 2), boxTy + tsizeH / 2 + (boxTh * 2) + rowH, str)
+                                end
+                                -- fuelmin
+                                if idx == 4 then
+                                    local logFUELmin = snsr
+                                end
+                                -- fuelmax
+                                if idx == 5 then
+                                    local logFUELmax = snsr
+                                end
+                                -- rpmmin
+                                if idx == 6 then
+                                    rstr = snsr
+                                end
+                                -- rpmmax
+                                if idx == 7 and theme.logsCOL4w ~= 0 then
+                                    str = rstr .. 'rpm / ' .. snsr .. 'rpm'
+                                    tsizeW, tsizeH = lcd.getTextSize(str)
+                                    lcd.drawText(col4x + (theme.logsCOL4w / 2) - (tsizeW / 2), boxTy + tsizeH / 2 + (boxTh * 2) + rowH, str)
+                                end
+                                -- currentmin
+                                if idx == 8 then
+                                    cstr = snsr
+                                end
+                                -- currentmax
+                                if idx == 9 and theme.logsCOL3w ~= 0 then
+                                    str = neuronstatus.round(cstr / 10, 1) .. 'A / ' .. neuronstatus.round(snsr / 10, 1) .. 'A'
+                                    tsizeW, tsizeH = lcd.getTextSize(str)
+                                    lcd.drawText(col3x + (theme.logsCOL3w / 2) - (tsizeW / 2), boxTy + tsizeH / 2 + (boxTh * 2) + rowH, str)
+                                end
+                                -- rssimin
+                                if idx == 10 then
+                                    lqstr = snsr
 
+                                end
+                                -- rssimax
+                                if idx == 11 and theme.logsCOL5w ~= 0 then
+                                    str = lqstr .. '% / ' .. snsr .. '%'
+                                    tsizeW, tsizeH = lcd.getTextSize(str)
+                                    lcd.drawText(col5x + (theme.logsCOL5w / 2) - (tsizeW / 2), boxTy + tsizeH / 2 + (boxTh * 2) + rowH, str)
+                                end
+                                -- escmin
+                                if idx == 12 then
+                                    escstr = snsr
+                                end
+                                -- escmax
+                                if idx == 13 and theme.logsCOL6w ~= 0 then
+                                    str = neuronstatus.round(escstr / 100, 0) .. '° / ' .. neuronstatus.round(snsr / 100, 0) .. '°'
+                                    strf = neuronstatus.round(escstr / 100, 0) .. '. / ' .. neuronstatus.round(snsr / 100, 0) .. '.'
+                                    tsizeW, tsizeH = lcd.getTextSize(strf)
+                                    lcd.drawText(col6x + (theme.logsCOL6w / 2) - (tsizeW / 2), boxTy + tsizeH / 2 + (boxTh * 2) + rowH, str)
+                                end
                             end
-                            -- rssimax
-                            if idx == 11 and theme.logsCOL5w ~= 0 then
-                                str = lqstr .. '% / ' .. snsr .. '%'
-                                tsizeW, tsizeH = lcd.getTextSize(str)
-                                lcd.drawText(col5x + (theme.logsCOL5w / 2) - (tsizeW / 2), boxTy + tsizeH / 2 + (boxTh * 2) + rowH, str)
+                            -- end loop of each storage line		
+                        end
+                        c = c + 1
+
+                        if h < 200 then
+                            if c > 5 then
+                                break
                             end
-                            -- escmin
-                            if idx == 12 then
-                                escstr = snsr
-                            end
-                            -- escmax
-                            if idx == 13 and theme.logsCOL6w ~= 0 then
-                                str = neuronstatus.round(escstr / 100, 0) .. '° / ' .. neuronstatus.round(snsr / 100, 0) .. '°'
-                                strf = neuronstatus.round(escstr / 100, 0) .. '. / ' .. neuronstatus.round(snsr / 100, 0) .. '.'
-                                tsizeW, tsizeH = lcd.getTextSize(strf)
-                                lcd.drawText(col6x + (theme.logsCOL6w / 2) - (tsizeW / 2), boxTy + tsizeH / 2 + (boxTh * 2) + rowH, str)
+                        else
+                            if c > 6 then
+                                break
                             end
                         end
-                        -- end loop of each storage line		
+                        -- end of each log storage slot
                     end
-                    c = c + 1
-
-                    if h < 200 then
-                        if c > 5 then
-                            break
-                        end
-                    else
-                        if c > 6 then
-                            break
-                        end
-                    end
-                    -- end of each log storage slot
                 end
             end
         end
     end
-
     -- lcd.drawText((w / 2) - tsizeW / 2, (h / 2) - tsizeH / 2, str)
     return
 end
@@ -2859,8 +2816,8 @@ local function read()
     layoutBox4Param = storage.read("mem28")
     layoutBox5Param = storage.read("mem29")
     layoutBox6Param = storage.read("mem30")
-	timeralarmVibrateParam = storage.read("mem31")
-	timeralarmParam = storage.read("mem32")
+    timeralarmVibrateParam = storage.read("mem31")
+    timeralarmParam = storage.read("mem32")
 
     if layoutBox1Param == nil then
         layoutBox1Param = 11
@@ -2918,7 +2875,7 @@ local function write()
     storage.write("mem29", layoutBox5Param)
     storage.write("mem30", layoutBox6Param)
     storage.write("mem31", timeralarmVibrateParam)
-	storage.write("mem32", timeralarmParam)
+    storage.write("mem32", timeralarmParam)
     updateFILTERING()
 end
 
@@ -3052,42 +3009,38 @@ function neuronstatus.playESC(widget)
     end
 end
 
-
-
 function neuronstatus.playTIMERALARM(widget)
-	if theTIME ~= nil and timeralarmParam ~= nil and timeralarmParam ~= 0 then
-		
-		-- reset timer Delay
-		if theTIME > timeralarmParam + 2 then
-			timerAlarmPlay = true
-		end
-		-- trigger first timer
-		if timerAlarmPlay == true then
-			if theTIME >= timeralarmParam and theTIME <= timeralarmParam + 1 then
+    if theTIME ~= nil and timeralarmParam ~= nil and timeralarmParam ~= 0 then
 
-			
-				system.playFile(WIDGET_DIR .. "sounds/alerts/beep.wav")
-				
-				hours = string.format("%02.f", math.floor(theTIME / 3600))
-				mins = string.format("%02.f", math.floor(theTIME / 60 - (hours * 60)))
-				secs = string.format("%02.f", math.floor(theTIME - hours * 3600 - mins * 60))			
+        -- reset timer Delay
+        if theTIME > timeralarmParam + 2 then
+            timerAlarmPlay = true
+        end
+        -- trigger first timer
+        if timerAlarmPlay == true then
+            if theTIME >= timeralarmParam and theTIME <= timeralarmParam + 1 then
 
-				system.playFile(WIDGET_DIR .. "sounds/alerts/timer.wav")
-				if mins ~= "00" then
-					system.playNumber(mins, UNIT_MINUTE, 2)
-				end
-				system.playNumber(secs, UNIT_SECOND, 2)
-				
-				if timeralarmVibrateParam == true then
-				    system.playHaptic("- - -")
-				end
-				
-				timerAlarmPlay = false
-			end
-		end
+                system.playFile(WIDGET_DIR .. "sounds/alerts/beep.wav")
 
+                hours = string.format("%02.f", math.floor(theTIME / 3600))
+                mins = string.format("%02.f", math.floor(theTIME / 60 - (hours * 60)))
+                secs = string.format("%02.f", math.floor(theTIME - hours * 3600 - mins * 60))
 
-	end
+                system.playFile(WIDGET_DIR .. "sounds/alerts/timer.wav")
+                if mins ~= "00" then
+                    system.playNumber(mins, UNIT_MINUTE, 2)
+                end
+                system.playNumber(secs, UNIT_SECOND, 2)
+
+                if timeralarmVibrateParam == true then
+                    system.playHaptic("- - -")
+                end
+
+                timerAlarmPlay = false
+            end
+        end
+
+    end
 end
 
 function neuronstatus.playTIMER(widget)
@@ -3369,9 +3322,9 @@ local function wakeup(widget)
             neuronstatus.playESC(widget)
             -- timer
             neuronstatus.playTIMER(widget)
-			
-			-- timer alarm
-			neuronstatus.playTIMERALARM(widget)
+
+            -- timer alarm
+            neuronstatus.playTIMERALARM(widget)
 
         else
             adjJUSTUP = true
