@@ -771,7 +771,7 @@ function neuronstatus.getThemeInfo()
         }
     end
 
-    if environment.board == "X10EXPRESS" then
+    if environment.board == "X10EXPRESS" or environment.board == "X10" or environment.board == "X10S"  or environment.board == "X12"  or environment.board == "X12S"    then
         ret = {
             supportedRADIO = true,
             colSpacing = 2,
@@ -1311,7 +1311,7 @@ local function paint(widget)
                 return
             end
         end
-        if environment.board == "X10EXPRESS" then
+        if environment.board == "X10EXPRESS" or environment.board == "X10" or environment.board == "X10S"  or environment.board == "X12"  or environment.board == "X12S"    then
             if w ~= 472 and h ~= 158 then
                 neuronstatus.screenError("DISPLAY SIZE INVALID")
                 return
