@@ -538,26 +538,18 @@ local function configure(widget)
 end
 
 function neuronstatus.getRssiSensor()
-    if environment.simulation then
-        return 100
-    end
+    if environment.simulation then return 100 end
 
     local rssiNames = {"RSSI", "RSSI Int", "RSSI Ext", "RSSI 2.4G", "RSSI 900M", "Rx RSSI1", "Rx RSSI2"}
     for i, name in ipairs(rssiNames) do
         rssiSensor = system.getSource(name)
-        if rssiSensor then
-            return rssiSensor
-        end
+        if rssiSensor then return rssiSensor end
     end
 end
 
 function neuronstatus.getRSSI()
-    if environment.simulation == true then
-        return 100
-    end
-    if rssiSensor ~= nil and rssiSensor:state() then
-        return rssiSensor:value()
-    end
+    if environment.simulation == true then return 100 end
+    if rssiSensor ~= nil and rssiSensor:state() then return rssiSensor:value() end
     return 0
 end
 
@@ -771,7 +763,7 @@ function neuronstatus.getThemeInfo()
         }
     end
 
-    if environment.board == "X10EXPRESS" or environment.board == "X10" or environment.board == "X10S"  or environment.board == "X12"  or environment.board == "X12S"    then
+    if environment.board == "X10EXPRESS" or environment.board == "X10" or environment.board == "X10S" or environment.board == "X12" or environment.board == "X12S" then
         ret = {
             supportedRADIO = true,
             colSpacing = 2,
@@ -856,9 +848,7 @@ local function telemetryBox(x, y, w, h, title, value, unit, smallbox, alarm, min
             end
         end
 
-        if alarm == true then
-            lcd.color(lcd.RGB(255, 0, 0, 1))
-        end
+        if alarm == true then lcd.color(lcd.RGB(255, 0, 0, 1)) end
 
         lcd.drawText(sx, sy, str)
 
@@ -889,9 +879,7 @@ local function telemetryBox(x, y, w, h, title, value, unit, smallbox, alarm, min
 
             lcd.font(theme.fontTITLE)
 
-            if tostring(minimum) ~= "-" then
-                lastMin = minimum
-            end
+            if tostring(minimum) ~= "-" then lastMin = minimum end
 
             if tostring(minimum) == "-" then
                 str = minimum
@@ -1100,9 +1088,7 @@ function neuronstatus.logsBOX()
                                     lcd.drawText(col1x + (theme.logsCOL1w / 2) - (tsizeW / 2), boxTy + tsizeH / 2 + (boxTh * 2) + rowH, str)
                                 end
                                 -- voltagemin
-                                if idx == 2 then
-                                    vstr = snsr
-                                end
+                                if idx == 2 then vstr = snsr end
                                 -- voltagemax
                                 if idx == 3 and theme.logsCOL2w ~= 0 then
                                     str = neuronstatus.round(vstr / 100, 1) .. 'v / ' .. neuronstatus.round(snsr / 100, 1) .. 'v'
@@ -1110,17 +1096,11 @@ function neuronstatus.logsBOX()
                                     lcd.drawText(col2x + (theme.logsCOL2w / 2) - (tsizeW / 2), boxTy + tsizeH / 2 + (boxTh * 2) + rowH, str)
                                 end
                                 -- fuelmin
-                                if idx == 4 then
-                                    local logFUELmin = snsr
-                                end
+                                if idx == 4 then local logFUELmin = snsr end
                                 -- fuelmax
-                                if idx == 5 then
-                                    local logFUELmax = snsr
-                                end
+                                if idx == 5 then local logFUELmax = snsr end
                                 -- rpmmin
-                                if idx == 6 then
-                                    rstr = snsr
-                                end
+                                if idx == 6 then rstr = snsr end
                                 -- rpmmax
                                 if idx == 7 and theme.logsCOL4w ~= 0 then
                                     str = rstr .. 'rpm / ' .. snsr .. 'rpm'
@@ -1128,9 +1108,7 @@ function neuronstatus.logsBOX()
                                     lcd.drawText(col4x + (theme.logsCOL4w / 2) - (tsizeW / 2), boxTy + tsizeH / 2 + (boxTh * 2) + rowH, str)
                                 end
                                 -- currentmin
-                                if idx == 8 then
-                                    cstr = snsr
-                                end
+                                if idx == 8 then cstr = snsr end
                                 -- currentmax
                                 if idx == 9 and theme.logsCOL3w ~= 0 then
                                     str = neuronstatus.round(cstr / 10, 1) .. 'A / ' .. neuronstatus.round(snsr / 10, 1) .. 'A'
@@ -1138,10 +1116,7 @@ function neuronstatus.logsBOX()
                                     lcd.drawText(col3x + (theme.logsCOL3w / 2) - (tsizeW / 2), boxTy + tsizeH / 2 + (boxTh * 2) + rowH, str)
                                 end
                                 -- rssimin
-                                if idx == 10 then
-                                    lqstr = snsr
-
-                                end
+                                if idx == 10 then lqstr = snsr end
                                 -- rssimax
                                 if idx == 11 and theme.logsCOL5w ~= 0 then
                                     str = lqstr .. '% / ' .. snsr .. '%'
@@ -1149,9 +1124,7 @@ function neuronstatus.logsBOX()
                                     lcd.drawText(col5x + (theme.logsCOL5w / 2) - (tsizeW / 2), boxTy + tsizeH / 2 + (boxTh * 2) + rowH, str)
                                 end
                                 -- escmin
-                                if idx == 12 then
-                                    escstr = snsr
-                                end
+                                if idx == 12 then escstr = snsr end
                                 -- escmax
                                 if idx == 13 and theme.logsCOL6w ~= 0 then
                                     str = neuronstatus.round(escstr / 100, 0) .. '° / ' .. neuronstatus.round(snsr / 100, 0) .. '°'
@@ -1165,13 +1138,9 @@ function neuronstatus.logsBOX()
                         c = c + 1
 
                         if h < 200 then
-                            if c > 5 then
-                                break
-                            end
+                            if c > 5 then break end
                         else
-                            if c > 6 then
-                                break
-                            end
+                            if c > 6 then break end
                         end
                         -- end of each log storage slot
                     end
@@ -1311,7 +1280,7 @@ local function paint(widget)
                 return
             end
         end
-        if environment.board == "X10EXPRESS" or environment.board == "X10" or environment.board == "X10S"  or environment.board == "X12"  or environment.board == "X12S"    then
+        if environment.board == "X10EXPRESS" or environment.board == "X10" or environment.board == "X10S" or environment.board == "X12" or environment.board == "X12S" then
             if w ~= 472 and h ~= 158 then
                 neuronstatus.screenError("DISPLAY SIZE INVALID")
                 return
@@ -1331,15 +1300,11 @@ local function paint(widget)
             sensorWARN = false
             smallBOX = false
 
-            if fuelIsLow then
-                sensorWARN = true
-            end
+            if fuelIsLow then sensorWARN = true end
 
             sensorVALUE = sensors.fuel
 
-            if sensors.fuel < 5 then
-                sensorVALUE = "0"
-            end
+            if sensors.fuel < 5 then sensorVALUE = "0" end
 
             if titleParam == true then
                 sensorTITLE = "FUEL"
@@ -1381,9 +1346,7 @@ local function paint(widget)
 
         sensorVALUE = str
 
-        if titleParam ~= true then
-            sensorTITLE = ""
-        end
+        if titleParam ~= true then sensorTITLE = "" end
 
         local sensorTGT = 'governor'
         sensordisplay[sensorTGT] = {}
@@ -1405,9 +1368,7 @@ local function paint(widget)
 
             sensorVALUE = sensors.rpm
 
-            if sensors.rpm < 5 then
-                sensorVALUE = 0
-            end
+            if sensors.rpm < 5 then sensorVALUE = 0 end
 
             if titleParam == true then
                 sensorTITLE = theme.title_rpm
@@ -1444,15 +1405,11 @@ local function paint(widget)
             sensorWARN = false
             smallBOX = false
 
-            if voltageIsLow then
-                sensorWARN = true
-            end
+            if voltageIsLow then sensorWARN = true end
 
             sensorVALUE = sensors.voltage / 100
 
-            if sensorVALUE < 1 then
-                sensorVALUE = 0
-            end
+            if sensorVALUE < 1 then sensorVALUE = 0 end
 
             if titleParam == true then
                 sensorTITLE = theme.title_voltage
@@ -1551,9 +1508,7 @@ local function paint(widget)
 
             sensorVALUE = neuronstatus.round(sensors.temp_esc / 100, 0)
 
-            if sensorVALUE < 1 then
-                sensorVALUE = 0
-            end
+            if sensorVALUE < 1 then sensorVALUE = 0 end
 
             if titleParam == true then
                 sensorTITLE = theme.title_tempESC
@@ -1594,9 +1549,7 @@ local function paint(widget)
 
             sensorVALUE = sensors.rssi
 
-            if sensorVALUE < 1 then
-                sensorVALUE = 0
-            end
+            if sensorVALUE < 1 then sensorVALUE = 0 end
 
             if titleParam == true then
                 sensorTITLE = theme.title_rssi
@@ -1631,9 +1584,7 @@ local function paint(widget)
 
             sensorVALUE = sensors.mah
 
-            if sensorVALUE < 1 then
-                sensorVALUE = 0
-            end
+            if sensorVALUE < 1 then sensorVALUE = 0 end
 
             if titleParam == true then
                 sensorTITLE = theme.title_mah
@@ -1749,48 +1700,20 @@ local function paint(widget)
             end
 
             -- remap sensorTGT
-            if sensorTGT == 1 then
-                sensorTGT = 'timer'
-            end
-            if sensorTGT == 2 then
-                sensorTGT = 'voltage'
-            end
-            if sensorTGT == 3 then
-                sensorTGT = 'fuel'
-            end
-            if sensorTGT == 4 then
-                sensorTGT = 'current'
-            end
-            if sensorTGT == 5 then
-                sensorTGT = 'mah'
-            end
-            if sensorTGT == 6 then
-                sensorTGT = 'rpm'
-            end
-            if sensorTGT == 7 then
-                sensorTGT = 'rssi'
-            end
-            if sensorTGT == 9 then
-                sensorTGT = 'temp_esc'
-            end
-            if sensorTGT == 10 then
-                sensorTGT = 'temp_mcu'
-            end
-            if sensorTGT == 11 then
-                sensorTGT = 'image__gov'
-            end
-            if sensorTGT == 12 then
-                sensorTGT = 'voltage__fuel'
-            end
-            if sensorTGT == 13 then
-                sensorTGT = 'voltage__current'
-            end
-            if sensorTGT == 14 then
-                sensorTGT = 'voltage__mah'
-            end
-            if sensorTGT == 15 then
-                sensorTGT = 'timer__t_esc__rssi'
-            end
+            if sensorTGT == 1 then sensorTGT = 'timer' end
+            if sensorTGT == 2 then sensorTGT = 'voltage' end
+            if sensorTGT == 3 then sensorTGT = 'fuel' end
+            if sensorTGT == 4 then sensorTGT = 'current' end
+            if sensorTGT == 5 then sensorTGT = 'mah' end
+            if sensorTGT == 6 then sensorTGT = 'rpm' end
+            if sensorTGT == 7 then sensorTGT = 'rssi' end
+            if sensorTGT == 9 then sensorTGT = 'temp_esc' end
+            if sensorTGT == 10 then sensorTGT = 'temp_mcu' end
+            if sensorTGT == 11 then sensorTGT = 'image__gov' end
+            if sensorTGT == 12 then sensorTGT = 'voltage__fuel' end
+            if sensorTGT == 13 then sensorTGT = 'voltage__current' end
+            if sensorTGT == 14 then sensorTGT = 'voltage__mah' end
+            if sensorTGT == 15 then sensorTGT = 'timer__t_esc__rssi' end
 
             -- set sensor values based on sensorTGT
             if sensordisplay[sensorTGT] ~= nil then
@@ -1957,13 +1880,9 @@ local function paint(widget)
         end
 
         -- if linkUP == 0 then
-        if linkUP == 0 then
-            neuronstatus.noTelem()
-        end
+        if linkUP == 0 then neuronstatus.noTelem() end
 
-        if showLOGS then
-            neuronstatus.logsBOX()
-        end
+        if showLOGS then neuronstatus.logsBOX() end
 
     end
 
@@ -1985,9 +1904,7 @@ local function paint(widget)
                     timerNearlyActive = 0
                     startTIME = os.clock()
                 end
-                if startTIME ~= nil then
-                    theTIME = os.clock() - startTIME
-                end
+                if startTIME ~= nil then theTIME = os.clock() - startTIME end
             end
         end
 
@@ -2018,9 +1935,7 @@ local function paint(widget)
 
     if lfTimer == true then
         -- start timer
-        if lfTimerStart == nil then
-            lfTimerStart = os.time()
-        end
+        if lfTimerStart == nil then lfTimerStart = os.time() end
     else
         lfTimerStart = nil
     end
@@ -2032,9 +1947,7 @@ local function paint(widget)
 
             system.playFile(WIDGET_DIR .. "sounds/alerts/lowfuel.wav")
 
-            if alrthptParam == true then
-                system.playHaptic("- . -")
-            end
+            if alrthptParam == true then system.playHaptic("- . -") end
 
         end
     else
@@ -2066,9 +1979,7 @@ local function paint(widget)
 
     if lvTimer == true then
         -- start timer
-        if lvTimerStart == nil then
-            lvTimerStart = os.time()
-        end
+        if lvTimerStart == nil then lvTimerStart = os.time() end
     else
         lvTimerStart = nil
     end
@@ -2080,9 +1991,7 @@ local function paint(widget)
                 lvAudioAlertCounter = os.clock()
 
                 system.playFile(WIDGET_DIR .. "sounds/alerts/lowvoltage.wav")
-                if alrthptParam == true then
-                    system.playHaptic("- . -")
-                end
+                if alrthptParam == true then system.playHaptic("- . -") end
 
             end
         end
@@ -2096,9 +2005,7 @@ end
 function neuronstatus.ReverseTable(t)
     local reversedTable = {}
     local itemCount = #t
-    for k, v in ipairs(t) do
-        reversedTable[itemCount + 1 - k] = v
-    end
+    for k, v in ipairs(t) do reversedTable[itemCount + 1 - k] = v end
     return reversedTable
 end
 
@@ -2108,9 +2015,7 @@ local function getChannelValue(ich)
 end
 
 function neuronstatus.getSensors()
-    if isInConfiguration == true then
-        return oldsensors
-    end
+    if isInConfiguration == true then return oldsensors end
 
     lcd.resetFocusTimeout()
 
@@ -2289,32 +2194,16 @@ function neuronstatus.getSensors()
         fuel = 0
     end
 
-    if linkUP == 0 then
-        fuel = 0
-    end
+    if linkUP == 0 then fuel = 0 end
 
-    if oldsensors.voltage ~= voltage then
-        refresh = true
-    end
-    if oldsensors.rpm ~= rpm then
-        refresh = true
-    end
-    if oldsensors.current ~= current then
-        refresh = true
-    end
-    if oldsensors.temp_esc ~= temp_esc then
-        refresh = true
-    end
+    if oldsensors.voltage ~= voltage then refresh = true end
+    if oldsensors.rpm ~= rpm then refresh = true end
+    if oldsensors.current ~= current then refresh = true end
+    if oldsensors.temp_esc ~= temp_esc then refresh = true end
 
-    if oldsensors.fuel ~= fuel then
-        refresh = true
-    end
-    if oldsensors.mah ~= mah then
-        refresh = true
-    end
-    if oldsensors.rssi ~= rssi then
-        refresh = true
-    end
+    if oldsensors.fuel ~= fuel then refresh = true end
+    if oldsensors.mah ~= mah then refresh = true end
+    if oldsensors.rssi ~= rssi then refresh = true end
 
     ret = {fm = fm, voltage = voltage, rpm = rpm, current = current, temp_esc = temp_esc, fuel = fuel, mah = mah, rssi = rssi}
     oldsensors = ret
@@ -2324,9 +2213,7 @@ end
 
 local function sensorsMAXMIN(sensors)
 
-    if idleupdelayParam == nil then
-        idleupdelayParam = 1
-    end
+    if idleupdelayParam == nil then idleupdelayParam = 1 end
 
     if linkUP ~= 0 and theTIME ~= nil and theTIME ~= nil and idleupdelayParam ~= nil then
 
@@ -2347,9 +2234,7 @@ local function sensorsMAXMIN(sensors)
         end
 
         -- prob put in a screen/audio alert for initialising
-        if theTIME >= 1 and theTIME < idleupdelayParam then
-
-        end
+        if theTIME >= 1 and theTIME < idleupdelayParam then end
 
         if theTIME >= idleupdelayParam then
 
@@ -2378,47 +2263,23 @@ local function sensorsMAXMIN(sensors)
 
             if theTIME >= (idleupdelayParam + idleupdelayOFFSET) and idleupSwitchParam:state() == true then
 
-                if sensors.voltage < sensorVoltageMin then
-                    sensorVoltageMin = sensors.voltage
-                end
-                if sensors.voltage > sensorVoltageMax then
-                    sensorVoltageMax = sensors.voltage
-                end
+                if sensors.voltage < sensorVoltageMin then sensorVoltageMin = sensors.voltage end
+                if sensors.voltage > sensorVoltageMax then sensorVoltageMax = sensors.voltage end
 
-                if sensors.fuel < sensorFuelMin then
-                    sensorFuelMin = sensors.fuel
-                end
-                if sensors.fuel > sensorFuelMax then
-                    sensorFuelMax = sensors.fuel
-                end
+                if sensors.fuel < sensorFuelMin then sensorFuelMin = sensors.fuel end
+                if sensors.fuel > sensorFuelMax then sensorFuelMax = sensors.fuel end
 
-                if sensors.rpm < sensorRPMMin then
-                    sensorRPMMin = sensors.rpm
-                end
-                if sensors.rpm > sensorRPMMax then
-                    sensorRPMMax = sensors.rpm
-                end
+                if sensors.rpm < sensorRPMMin then sensorRPMMin = sensors.rpm end
+                if sensors.rpm > sensorRPMMax then sensorRPMMax = sensors.rpm end
                 if sensors.current < sensorCurrentMin then
                     sensorCurrentMin = sensors.current
-                    if sensorCurrentMin == 0 then
-                        sensorCurrentMin = 1
-                    end
+                    if sensorCurrentMin == 0 then sensorCurrentMin = 1 end
                 end
-                if sensors.current > sensorCurrentMax then
-                    sensorCurrentMax = sensors.current
-                end
-                if sensors.rssi < sensorRSSIMin then
-                    sensorRSSIMin = sensors.rssi
-                end
-                if sensors.rssi > sensorRSSIMax then
-                    sensorRSSIMax = sensors.rssi
-                end
-                if sensors.temp_esc < sensorTempESCMin then
-                    sensorTempESCMin = sensors.temp_esc
-                end
-                if sensors.temp_esc > sensorTempESCMax then
-                    sensorTempESCMax = sensors.temp_esc
-                end
+                if sensors.current > sensorCurrentMax then sensorCurrentMax = sensors.current end
+                if sensors.rssi < sensorRSSIMin then sensorRSSIMin = sensors.rssi end
+                if sensors.rssi > sensorRSSIMax then sensorRSSIMax = sensors.rssi end
+                if sensors.temp_esc < sensorTempESCMin then sensorTempESCMin = sensors.temp_esc end
+                if sensors.temp_esc > sensorTempESCMax then sensorTempESCMax = sensors.temp_esc end
                 motorWasActive = true
             end
 
@@ -2448,9 +2309,7 @@ local function sensorsMAXMIN(sensors)
             -- print("Last data: ".. maxminRow )
 
             table.insert(maxminFinals, 1, maxminRow)
-            if tablelength(maxminFinals) >= 9 then
-                table.remove(maxminFinals, 9)
-            end
+            if tablelength(maxminFinals) >= 9 then table.remove(maxminFinals, 9) end
 
             name = string.gsub(model.name(), "%s+", "_")
             name = string.gsub(name, "%W", "_")
@@ -2495,9 +2354,7 @@ end
 
 function tablelength(T)
     local count = 0
-    for _ in pairs(T) do
-        count = count + 1
-    end
+    for _ in pairs(T) do count = count + 1 end
     return count
 end
 
@@ -2510,9 +2367,7 @@ function print_r(arr, indentLevel)
         return
     end
 
-    for i = 0, indentLevel do
-        indentStr = indentStr .. "\t"
-    end
+    for i = 0, indentLevel do indentStr = indentStr .. "\t" end
 
     for index, value in ipairs(arr) do
         if type(value) == "table" then
@@ -2556,12 +2411,8 @@ local function updateFILTERING()
 end
 
 function neuronstatus.kalmanCurrent(new, old)
-    if old == nil then
-        old = 0
-    end
-    if new == nil then
-        new = 0
-    end
+    if old == nil then old = 0 end
+    if new == nil then new = 0 end
     x = old
     local p = 100
     local k = 0
@@ -2573,12 +2424,8 @@ function neuronstatus.kalmanCurrent(new, old)
 end
 
 function neuronstatus.kalmanRSSI(new, old)
-    if old == nil then
-        old = 0
-    end
-    if new == nil then
-        new = 0
-    end
+    if old == nil then old = 0 end
+    if new == nil then new = 0 end
     x = old
     local p = 100
     local k = 0
@@ -2590,12 +2437,8 @@ function neuronstatus.kalmanRSSI(new, old)
 end
 
 function neuronstatus.kalmanTempESC(new, old)
-    if old == nil then
-        old = 0
-    end
-    if new == nil then
-        new = 0
-    end
+    if old == nil then old = 0 end
+    if new == nil then new = 0 end
     x = old
     local p = 100
     local k = 0
@@ -2607,12 +2450,8 @@ function neuronstatus.kalmanTempESC(new, old)
 end
 
 function neuronstatus.kalmanRPM(new, old)
-    if old == nil then
-        old = 0
-    end
-    if new == nil then
-        new = 0
-    end
+    if old == nil then old = 0 end
+    if new == nil then new = 0 end
     x = old
     local p = 100
     local k = 0
@@ -2624,12 +2463,8 @@ function neuronstatus.kalmanRPM(new, old)
 end
 
 function neuronstatus.kalmanVoltage(new, old)
-    if old == nil then
-        old = 0
-    end
-    if new == nil then
-        new = 0
-    end
+    if old == nil then old = 0 end
+    if new == nil then new = 0 end
     x = old
     local p = 100
     local k = 0
@@ -2641,15 +2476,11 @@ function neuronstatus.kalmanVoltage(new, old)
 end
 
 function neuronstatus.sensorMakeNumber(x)
-    if x == nil or x == "" then
-        x = 0
-    end
+    if x == nil or x == "" then x = 0 end
 
     x = string.gsub(x, "%D+", "")
     x = tonumber(x)
-    if x == nil or x == "" then
-        x = 0
-    end
+    if x == nil or x == "" then x = 0 end
 
     return x
 end
@@ -2703,9 +2534,7 @@ end
 function neuronstatus.spairs(t, order)
     -- collect the keys
     local keys = {}
-    for k in pairs(t) do
-        keys[#keys + 1] = k
-    end
+    for k in pairs(t) do keys[#keys + 1] = k end
 
     -- if order function given, sort by it by passing the table and keys a, b,
     -- otherwise just sort the keys 
@@ -2721,29 +2550,21 @@ function neuronstatus.spairs(t, order)
     local i = 0
     return function()
         i = i + 1
-        if keys[i] then
-            return keys[i], t[keys[i]]
-        end
+        if keys[i] then return keys[i], t[keys[i]] end
     end
 end
 
 function neuronstatus.explode(inputstr, sep)
-    if sep == nil then
-        sep = "%s"
-    end
+    if sep == nil then sep = "%s" end
     local t = {}
-    for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
-        table.insert(t, str)
-    end
+    for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do table.insert(t, str) end
     return t
 end
 
 function neuronstatus.ReadLine(f, line)
     local i = 1 -- line counter
     for l in f:lines() do -- lines iterator, "l" returns the line
-        if i == line then
-            return l
-        end -- we found this line, return it
+        if i == line then return l end -- we found this line, return it
         i = i + 1 -- counting lines
     end
     return "" -- Doesn't have that line
@@ -2819,24 +2640,12 @@ local function read()
     timeralarmVibrateParam = storage.read("mem31")
     timeralarmParam = storage.read("mem32")
 
-    if layoutBox1Param == nil then
-        layoutBox1Param = 11
-    end
-    if layoutBox2Param == nil then
-        layoutBox2Param = 2
-    end
-    if layoutBox3Param == nil then
-        layoutBox3Param = 3
-    end
-    if layoutBox4Param == nil then
-        layoutBox4Param = 15
-    end
-    if layoutBox5Param == nil then
-        layoutBox5Param = 4
-    end
-    if layoutBox6Param == nil then
-        layoutBox6Param = 6
-    end
+    if layoutBox1Param == nil then layoutBox1Param = 11 end
+    if layoutBox2Param == nil then layoutBox2Param = 2 end
+    if layoutBox3Param == nil then layoutBox3Param = 3 end
+    if layoutBox4Param == nil then layoutBox4Param = 15 end
+    if layoutBox5Param == nil then layoutBox5Param = 4 end
+    if layoutBox6Param == nil then layoutBox6Param = 6 end
 
     neuronstatus.resetALL()
     updateFILTERING()
@@ -3013,9 +2822,7 @@ function neuronstatus.playTIMERALARM(widget)
     if theTIME ~= nil and timeralarmParam ~= nil and timeralarmParam ~= 0 then
 
         -- reset timer Delay
-        if theTIME > timeralarmParam + 2 then
-            timerAlarmPlay = true
-        end
+        if theTIME > timeralarmParam + 2 then timerAlarmPlay = true end
         -- trigger first timer
         if timerAlarmPlay == true then
             if theTIME >= timeralarmParam and theTIME <= timeralarmParam + 1 then
@@ -3027,14 +2834,10 @@ function neuronstatus.playTIMERALARM(widget)
                 secs = string.format("%02.f", math.floor(theTIME - hours * 3600 - mins * 60))
 
                 system.playFile(WIDGET_DIR .. "sounds/alerts/timer.wav")
-                if mins ~= "00" then
-                    system.playNumber(mins, UNIT_MINUTE, 2)
-                end
+                if mins ~= "00" then system.playNumber(mins, UNIT_MINUTE, 2) end
                 system.playNumber(secs, UNIT_SECOND, 2)
 
-                if timeralarmVibrateParam == true then
-                    system.playHaptic("- - -")
-                end
+                if timeralarmVibrateParam == true then system.playHaptic("- - -") end
 
                 timerAlarmPlay = false
             end
@@ -3075,9 +2878,7 @@ function neuronstatus.playTIMER(widget)
                         timeraudioannounceCounter = os.clock()
                         -- print ("Playing TIMER (first)" .. alertTIME)
 
-                        if mins ~= "00" then
-                            system.playNumber(mins, UNIT_MINUTE, 2)
-                        end
+                        if mins ~= "00" then system.playNumber(mins, UNIT_MINUTE, 2) end
                         system.playNumber(secs, UNIT_SECOND, 2)
 
                         timerDoneFirst = true
@@ -3091,9 +2892,7 @@ function neuronstatus.playTIMER(widget)
                         if ((tonumber(os.clock()) - tonumber(timeraudioannounceCounter)) >= announceIntervalParam) then
                             timeraudioannounceCounter = os.clock()
                             -- print ("Playing TIMER (repeat)" .. alertTIME)
-                            if mins ~= "00" then
-                                system.playNumber(mins, UNIT_MINUTE, 2)
-                            end
+                            if mins ~= "00" then system.playNumber(mins, UNIT_MINUTE, 2) end
                             system.playNumber(secs, UNIT_SECOND, 2)
                         end
                     end
@@ -3250,9 +3049,7 @@ local function event(widget, category, value, x, y)
     end
 
     if showLOGS then
-        if value == 35 then
-            showLOGS = false
-        end
+        if value == 35 then showLOGS = false end
 
         if category == EVT_TOUCH and (value == 16640 or value == 16641) then
             if (x >= (closeButtonX) and (x <= (closeButtonX + closeButtonW))) and (y >= (closeButtonY) and (y <= (closeButtonY + closeButtonH))) then
@@ -3261,9 +3058,7 @@ local function event(widget, category, value, x, y)
             end
             return true
         else
-            if category == EVT_TOUCH then
-                return true
-            end
+            if category == EVT_TOUCH then return true end
         end
 
     end
@@ -3283,9 +3078,7 @@ local function wakeup(widget)
         lcd.invalidate()
     end
 
-    if linkUP == 0 then
-        linkUPTime = os.clock()
-    end
+    if linkUP == 0 then linkUPTime = os.clock() end
 
     if linkUP ~= 0 then
 
