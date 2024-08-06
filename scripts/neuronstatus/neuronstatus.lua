@@ -1822,29 +1822,33 @@ function neuronstatus.paint(widget)
                     neuronstatus.telemetryBox(posX, posY, boxW, boxH / 2 - (theme.colSpacing / 2), sensorTITLE, sensorVALUE, sensorUNIT, smallBOX, sensorWARN, sensorMIN, sensorMAX)
 
                     sensorTGT = "temp_esc"
-                    sensorVALUE = neuronstatus.sensordisplay[sensorTGT]['value']
-                    sensorUNIT = neuronstatus.sensordisplay[sensorTGT]['unit']
-                    sensorMIN = neuronstatus.sensordisplay[sensorTGT]['min']
-                    sensorMAX = neuronstatus.sensordisplay[sensorTGT]['max']
-                    sensorWARN = neuronstatus.sensordisplay[sensorTGT]['warn']
-                    sensorTITLE = neuronstatus.sensordisplay[sensorTGT]['title']
+					
+					if neuronstatus.sensordisplay[sensorTGT] ~= nil then
+						sensorVALUE = neuronstatus.sensordisplay[sensorTGT]['value']
+						sensorUNIT = neuronstatus.sensordisplay[sensorTGT]['unit']
+						sensorMIN = neuronstatus.sensordisplay[sensorTGT]['min']
+						sensorMAX = neuronstatus.sensordisplay[sensorTGT]['max']
+						sensorWARN = neuronstatus.sensordisplay[sensorTGT]['warn']
+						sensorTITLE = neuronstatus.sensordisplay[sensorTGT]['title']
 
-                    smallBOX = true
-                    neuronstatus.telemetryBox(posX, posY + boxH / 2 + (theme.colSpacing / 2), boxW / 2 - (theme.colSpacing / 2), boxH / 2 - (theme.colSpacing / 2), sensorTITLE, sensorVALUE, sensorUNIT, smallBOX,
-                                 sensorWARN, sensorMIN, sensorMAX)
+						smallBOX = true
+						neuronstatus.telemetryBox(posX, posY + boxH / 2 + (theme.colSpacing / 2), boxW / 2 - (theme.colSpacing / 2), boxH / 2 - (theme.colSpacing / 2), sensorTITLE, sensorVALUE, sensorUNIT, smallBOX,
+									 sensorWARN, sensorMIN, sensorMAX)
+					end
 
                     sensorTGT = "rssi"
-                    sensorVALUE = neuronstatus.sensordisplay[sensorTGT]['value']
-                    sensorUNIT = neuronstatus.sensordisplay[sensorTGT]['unit']
-                    sensorMIN = neuronstatus.sensordisplay[sensorTGT]['min']
-                    sensorMAX = neuronstatus.sensordisplay[sensorTGT]['max']
-                    sensorWARN = neuronstatus.sensordisplay[sensorTGT]['warn']
-                    sensorTITLE = neuronstatus.sensordisplay[sensorTGT]['title']
+					if neuronstatus.sensordisplay[sensorTGT] ~= nil then				
+						sensorVALUE = neuronstatus.sensordisplay[sensorTGT]['value']
+						sensorUNIT = neuronstatus.sensordisplay[sensorTGT]['unit']
+						sensorMIN = neuronstatus.sensordisplay[sensorTGT]['min']
+						sensorMAX = neuronstatus.sensordisplay[sensorTGT]['max']
+						sensorWARN = neuronstatus.sensordisplay[sensorTGT]['warn']
+						sensorTITLE = neuronstatus.sensordisplay[sensorTGT]['title']
 
-                    smallBOX = true
-                    neuronstatus.telemetryBox(posX + boxW / 2 + (theme.colSpacing / 2), posY + boxH / 2 + (theme.colSpacing / 2), boxW / 2 - (theme.colSpacing / 2), boxH / 2 - (theme.colSpacing / 2), sensorTITLE,
-                                 sensorVALUE, sensorUNIT, smallBOX, sensorWARN, sensorMIN, sensorMAX)
-
+						smallBOX = true
+						neuronstatus.telemetryBox(posX + boxW / 2 + (theme.colSpacing / 2), posY + boxH / 2 + (theme.colSpacing / 2), boxW / 2 - (theme.colSpacing / 2), boxH / 2 - (theme.colSpacing / 2), sensorTITLE,
+									 sensorVALUE, sensorUNIT, smallBOX, sensorWARN, sensorMIN, sensorMAX)
+					end
                 end
 
             end
