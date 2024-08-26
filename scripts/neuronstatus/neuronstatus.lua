@@ -5,7 +5,7 @@ local arg = {...}
 local widgetDir = arg[1].widgetDir
 local compile = arg[2]
 
-
+neuronstatus.wakeupSchedulerUI = os.clock()
 neuronstatus.environment = system.getVersion()
 neuronstatus.oldsensors = {"refresh", "voltage", "rpm", "current", "temp_esc", "fuel", "mah", "rssi"}
 neuronstatus.loopCounter = 0
@@ -3043,7 +3043,29 @@ function neuronstatus.event(widget, category, value, x, y)
 end
 
 
+-- MAIN WAKEUP FUNCTION. THIS SIMPLY FARMS OUT AT DIFFERING SCHEDULES TO SUB FUNCTIONS
 function neuronstatus.wakeup(widget)
+
+
+	local schedulerUI
+	if lcd.isVisible() then
+		schedulerUI = 0.25
+	else
+		schedulerUI = 1	
+	end
+
+	--keep cpu load down by running UI at reduced interval
+	local now = os.clock()
+	if (now - neuronstatus.wakeupSchedulerUI) >= schedulerUI then	
+		neuronstatus.wakeupSchedulerUI = now
+		neuronstatus.wakeupUI()
+	end	
+
+
+
+end
+
+function neuronstatus.wakeupUI(widget)
     neuronstatus.refresh = false
 
     neuronstatus.linkUP = neuronstatus.getRSSI()
