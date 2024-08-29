@@ -201,7 +201,6 @@ function neuronstatus.create(widget)
     }
 end
 
-
 function neuronstatus.configure(widget)
     neuronstatus.isInConfiguration = true
 
@@ -607,8 +606,8 @@ function neuronstatus.getThemeInfo()
     h = (math.floor((h / 4)) * 4)
     w = (math.floor((w / 6)) * 6)
 
-    if neuronstatus.environment.board == "XES" or neuronstatus.environment.board == "XE" or neuronstatus.environment.board == "X20" or neuronstatus.environment.board == "X20S" or neuronstatus.environment.board == "X20PRO" or neuronstatus.environment.board == "X20PROAW" or
-        neuronstatus.environment.board == "X20R" or neuronstatus.environment.board == "X20RS" then
+    if neuronstatus.environment.board == "XES" or neuronstatus.environment.board == "XE" or neuronstatus.environment.board == "X20" or neuronstatus.environment.board == "X20S" or
+        neuronstatus.environment.board == "X20PRO" or neuronstatus.environment.board == "X20PROAW" or neuronstatus.environment.board == "X20R" or neuronstatus.environment.board == "X20RS" then
         ret = {
             supportedRADIO = true,
             colSpacing = 4,
@@ -736,7 +735,8 @@ function neuronstatus.getThemeInfo()
         }
     end
 
-    if neuronstatus.environment.board == "X10EXPRESS" or neuronstatus.environment.board == "X10" or neuronstatus.environment.board == "X10S" or neuronstatus.environment.board == "X12" or neuronstatus.environment.board == "X12S" then
+    if neuronstatus.environment.board == "X10EXPRESS" or neuronstatus.environment.board == "X10" or neuronstatus.environment.board == "X10S" or neuronstatus.environment.board == "X12" or
+        neuronstatus.environment.board == "X12S" then
         ret = {
             supportedRADIO = true,
             colSpacing = 2,
@@ -1228,7 +1228,8 @@ function neuronstatus.paint(widget)
         end
 
         -- widget size
-        if neuronstatus.environment.board == "V20" or neuronstatus.environment.board == "XES" or neuronstatus.environment.board == "X20" or neuronstatus.environment.board == "X20S" or neuronstatus.environment.board == "X20PRO" or neuronstatus.environment.board == "X20PROAW" then
+        if neuronstatus.environment.board == "V20" or neuronstatus.environment.board == "XES" or neuronstatus.environment.board == "X20" or neuronstatus.environment.board == "X20S" or
+            neuronstatus.environment.board == "X20PRO" or neuronstatus.environment.board == "X20PROAW" then
             if w ~= 784 and h ~= 294 then
                 neuronstatus.screenError("DISPLAY SIZE INVALID")
                 return
@@ -1253,7 +1254,8 @@ function neuronstatus.paint(widget)
                 return
             end
         end
-        if neuronstatus.environment.board == "X10EXPRESS" or neuronstatus.environment.board == "X10" or neuronstatus.environment.board == "X10S" or neuronstatus.environment.board == "X12" or neuronstatus.environment.board == "X12S" then
+        if neuronstatus.environment.board == "X10EXPRESS" or neuronstatus.environment.board == "X10" or neuronstatus.environment.board == "X10S" or neuronstatus.environment.board == "X12" or
+            neuronstatus.environment.board == "X12S" then
             if w ~= 472 and h ~= 158 then
                 neuronstatus.screenError("DISPLAY SIZE INVALID")
                 return
@@ -1726,7 +1728,8 @@ function neuronstatus.paint(widget)
                     sensorTITLE = neuronstatus.sensordisplay[sensorTGT]['title']
 
                     smallBOX = true
-                    neuronstatus.telemetryBox(posX, posY + boxH / 2 + (theme.colSpacing / 2), boxW, boxH / 2 - theme.colSpacing / 2, sensorTITLE, sensorVALUE, sensorUNIT, smallBOX, sensorWARN, sensorMIN, sensorMAX)
+                    neuronstatus.telemetryBox(posX, posY + boxH / 2 + (theme.colSpacing / 2), boxW, boxH / 2 - theme.colSpacing / 2, sensorTITLE, sensorVALUE, sensorUNIT, smallBOX, sensorWARN,
+                                              sensorMIN, sensorMAX)
 
                 end
 
@@ -1752,7 +1755,8 @@ function neuronstatus.paint(widget)
                     sensorTITLE = neuronstatus.sensordisplay[sensorTGT]['title']
 
                     smallBOX = true
-                    neuronstatus.telemetryBox(posX, posY + boxH / 2 + (theme.colSpacing / 2), boxW, boxH / 2 - theme.colSpacing / 2, sensorTITLE, sensorVALUE, sensorUNIT, smallBOX, sensorWARN, sensorMIN, sensorMAX)
+                    neuronstatus.telemetryBox(posX, posY + boxH / 2 + (theme.colSpacing / 2), boxW, boxH / 2 - theme.colSpacing / 2, sensorTITLE, sensorVALUE, sensorUNIT, smallBOX, sensorWARN,
+                                              sensorMIN, sensorMAX)
 
                 end
 
@@ -1778,7 +1782,8 @@ function neuronstatus.paint(widget)
                     sensorTITLE = neuronstatus.sensordisplay[sensorTGT]['title']
 
                     smallBOX = true
-                    neuronstatus.telemetryBox(posX, posY + boxH / 2 + (theme.colSpacing / 2), boxW, boxH / 2 - theme.colSpacing / 2, sensorTITLE, sensorVALUE, sensorUNIT, smallBOX, sensorWARN, sensorMIN, sensorMAX)
+                    neuronstatus.telemetryBox(posX, posY + boxH / 2 + (theme.colSpacing / 2), boxW, boxH / 2 - theme.colSpacing / 2, sensorTITLE, sensorVALUE, sensorUNIT, smallBOX, sensorWARN,
+                                              sensorMIN, sensorMAX)
 
                 end
 
@@ -1804,7 +1809,8 @@ function neuronstatus.paint(widget)
                     sensorTITLE = neuronstatus.sensordisplay[sensorTGT]['title']
 
                     smallBOX = true
-                    neuronstatus.telemetryBox(posX, posY + boxH / 2 + (theme.colSpacing / 2), boxW, boxH / 2 - theme.colSpacing / 2, sensorTITLE, sensorVALUE, sensorUNIT, smallBOX, sensorWARN, sensorMIN, sensorMAX)
+                    neuronstatus.telemetryBox(posX, posY + boxH / 2 + (theme.colSpacing / 2), boxW, boxH / 2 - theme.colSpacing / 2, sensorTITLE, sensorVALUE, sensorUNIT, smallBOX, sensorWARN,
+                                              sensorMIN, sensorMAX)
 
                 end
 
@@ -1822,33 +1828,33 @@ function neuronstatus.paint(widget)
                     neuronstatus.telemetryBox(posX, posY, boxW, boxH / 2 - (theme.colSpacing / 2), sensorTITLE, sensorVALUE, sensorUNIT, smallBOX, sensorWARN, sensorMIN, sensorMAX)
 
                     sensorTGT = "temp_esc"
-					
-					if neuronstatus.sensordisplay[sensorTGT] ~= nil then
-						sensorVALUE = neuronstatus.sensordisplay[sensorTGT]['value']
-						sensorUNIT = neuronstatus.sensordisplay[sensorTGT]['unit']
-						sensorMIN = neuronstatus.sensordisplay[sensorTGT]['min']
-						sensorMAX = neuronstatus.sensordisplay[sensorTGT]['max']
-						sensorWARN = neuronstatus.sensordisplay[sensorTGT]['warn']
-						sensorTITLE = neuronstatus.sensordisplay[sensorTGT]['title']
 
-						smallBOX = true
-						neuronstatus.telemetryBox(posX, posY + boxH / 2 + (theme.colSpacing / 2), boxW / 2 - (theme.colSpacing / 2), boxH / 2 - (theme.colSpacing / 2), sensorTITLE, sensorVALUE, sensorUNIT, smallBOX,
-									 sensorWARN, sensorMIN, sensorMAX)
-					end
+                    if neuronstatus.sensordisplay[sensorTGT] ~= nil then
+                        sensorVALUE = neuronstatus.sensordisplay[sensorTGT]['value']
+                        sensorUNIT = neuronstatus.sensordisplay[sensorTGT]['unit']
+                        sensorMIN = neuronstatus.sensordisplay[sensorTGT]['min']
+                        sensorMAX = neuronstatus.sensordisplay[sensorTGT]['max']
+                        sensorWARN = neuronstatus.sensordisplay[sensorTGT]['warn']
+                        sensorTITLE = neuronstatus.sensordisplay[sensorTGT]['title']
+
+                        smallBOX = true
+                        neuronstatus.telemetryBox(posX, posY + boxH / 2 + (theme.colSpacing / 2), boxW / 2 - (theme.colSpacing / 2), boxH / 2 - (theme.colSpacing / 2), sensorTITLE, sensorVALUE,
+                                                  sensorUNIT, smallBOX, sensorWARN, sensorMIN, sensorMAX)
+                    end
 
                     sensorTGT = "rssi"
-					if neuronstatus.sensordisplay[sensorTGT] ~= nil then				
-						sensorVALUE = neuronstatus.sensordisplay[sensorTGT]['value']
-						sensorUNIT = neuronstatus.sensordisplay[sensorTGT]['unit']
-						sensorMIN = neuronstatus.sensordisplay[sensorTGT]['min']
-						sensorMAX = neuronstatus.sensordisplay[sensorTGT]['max']
-						sensorWARN = neuronstatus.sensordisplay[sensorTGT]['warn']
-						sensorTITLE = neuronstatus.sensordisplay[sensorTGT]['title']
+                    if neuronstatus.sensordisplay[sensorTGT] ~= nil then
+                        sensorVALUE = neuronstatus.sensordisplay[sensorTGT]['value']
+                        sensorUNIT = neuronstatus.sensordisplay[sensorTGT]['unit']
+                        sensorMIN = neuronstatus.sensordisplay[sensorTGT]['min']
+                        sensorMAX = neuronstatus.sensordisplay[sensorTGT]['max']
+                        sensorWARN = neuronstatus.sensordisplay[sensorTGT]['warn']
+                        sensorTITLE = neuronstatus.sensordisplay[sensorTGT]['title']
 
-						smallBOX = true
-						neuronstatus.telemetryBox(posX + boxW / 2 + (theme.colSpacing / 2), posY + boxH / 2 + (theme.colSpacing / 2), boxW / 2 - (theme.colSpacing / 2), boxH / 2 - (theme.colSpacing / 2), sensorTITLE,
-									 sensorVALUE, sensorUNIT, smallBOX, sensorWARN, sensorMIN, sensorMAX)
-					end
+                        smallBOX = true
+                        neuronstatus.telemetryBox(posX + boxW / 2 + (theme.colSpacing / 2), posY + boxH / 2 + (theme.colSpacing / 2), boxW / 2 - (theme.colSpacing / 2),
+                                                  boxH / 2 - (theme.colSpacing / 2), sensorTITLE, sensorVALUE, sensorUNIT, smallBOX, sensorWARN, sensorMIN, sensorMAX)
+                    end
                 end
 
             end
@@ -2280,8 +2286,10 @@ function neuronstatus.sensorsMAXMIN(sensors)
                 neuronstatus.sensorCurrentMaxAlt = neuronstatus.sensorCurrentMax
             end
 
-            local maxminRow = theTIME .. "," .. neuronstatus.sensorVoltageMin .. "," .. neuronstatus.sensorVoltageMax .. "," .. neuronstatus.sensorFuelMin .. "," .. neuronstatus.sensorFuelMax .. "," .. neuronstatus.sensorRPMMin .. "," .. neuronstatus.sensorRPMMax .. "," ..
-                                  neuronstatus.sensorCurrentMinAlt .. "," .. neuronstatus.sensorCurrentMaxAlt .. "," .. neuronstatus.sensorRSSIMin .. "," .. neuronstatus.sensorRSSIMax .. "," .. neuronstatus.sensorTempESCMin .. "," .. neuronstatus.sensorTempESCMax
+            local maxminRow =
+                theTIME .. "," .. neuronstatus.sensorVoltageMin .. "," .. neuronstatus.sensorVoltageMax .. "," .. neuronstatus.sensorFuelMin .. "," .. neuronstatus.sensorFuelMax .. "," ..
+                    neuronstatus.sensorRPMMin .. "," .. neuronstatus.sensorRPMMax .. "," .. neuronstatus.sensorCurrentMinAlt .. "," .. neuronstatus.sensorCurrentMaxAlt .. "," ..
+                    neuronstatus.sensorRSSIMin .. "," .. neuronstatus.sensorRSSIMax .. "," .. neuronstatus.sensorTempESCMin .. "," .. neuronstatus.sensorTempESCMax
 
             -- print("Last data: ".. maxminRow )
 
@@ -3029,7 +3037,8 @@ function neuronstatus.event(widget, category, value, x, y)
         if value == 35 then neuronstatus.showLOGS = false end
 
         if category == EVT_TOUCH and (value == 16640 or value == 16641) then
-            if (x >= (neuronstatus.closeButtonX) and (x <= (neuronstatus.closeButtonX + neuronstatus.closeButtonW))) and (y >= (neuronstatus.closeButtonY) and (y <= (neuronstatus.closeButtonY + neuronstatus.closeButtonH))) then
+            if (x >= (neuronstatus.closeButtonX) and (x <= (neuronstatus.closeButtonX + neuronstatus.closeButtonW))) and
+                (y >= (neuronstatus.closeButtonY) and (y <= (neuronstatus.closeButtonY + neuronstatus.closeButtonH))) then
                 neuronstatus.showLOGS = false
                 closingLOGS = true
             end
@@ -3042,26 +3051,22 @@ function neuronstatus.event(widget, category, value, x, y)
 
 end
 
-
 -- MAIN WAKEUP FUNCTION. THIS SIMPLY FARMS OUT AT DIFFERING SCHEDULES TO SUB FUNCTIONS
 function neuronstatus.wakeup(widget)
 
+    local schedulerUI
+    if lcd.isVisible() then
+        schedulerUI = 0.25
+    else
+        schedulerUI = 1
+    end
 
-	local schedulerUI
-	if lcd.isVisible() then
-		schedulerUI = 0.25
-	else
-		schedulerUI = 1	
-	end
-
-	--keep cpu load down by running UI at reduced interval
-	local now = os.clock()
-	if (now - neuronstatus.wakeupSchedulerUI) >= schedulerUI then	
-		neuronstatus.wakeupSchedulerUI = now
-		neuronstatus.wakeupUI()
-	end	
-
-
+    -- keep cpu load down by running UI at reduced interval
+    local now = os.clock()
+    if (now - neuronstatus.wakeupSchedulerUI) >= schedulerUI then
+        neuronstatus.wakeupSchedulerUI = now
+        neuronstatus.wakeupUI()
+    end
 
 end
 
