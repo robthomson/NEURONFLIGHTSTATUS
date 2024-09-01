@@ -1869,119 +1869,7 @@ function neuronstatus.paint(widget)
 
     end
 
-    -- TIME		
-
-    if neuronstatus.linkUP ~= 0 then
-        if neuronstatus.armSwitchParam ~= nil then
-            if neuronstatus.armSwitchParam:state() == false then
-                neuronstatus.stopTimer = true
-                stopTIME = os.clock()
-                timerNearlyActive = 1
-                theTIME = 0
-            end
-        end
-
-        if neuronstatus.idleupSwitchParam ~= nil then
-            if neuronstatus.idleupSwitchParam:state() then
-                if timerNearlyActive == 1 then
-                    timerNearlyActive = 0
-                    startTIME = os.clock()
-                end
-                if startTIME ~= nil then theTIME = os.clock() - startTIME end
-            end
-        end
-
-    end
-
-    -- LOW FUEL ALERTS
-    -- big conditional to announce neuronstatus.lfTimer if needed
-
-    if neuronstatus.linkUP ~= 0 then
-        if neuronstatus.idleupSwitchParam ~= nil then
-            if neuronstatus.idleupSwitchParam:state() then
-                if (neuronstatus.sensors.fuel <= neuronstatus.lowfuelParam and neuronstatus.alertonParam == 1) then
-                    neuronstatus.lfTimer = true
-                elseif (neuronstatus.sensors.fuel <= neuronstatus.lowfuelParam and neuronstatus.alertonParam == 2) then
-                    neuronstatus.lfTimer = true
-                else
-                    neuronstatus.lfTimer = false
-                end
-            else
-                neuronstatus.lfTimer = false
-            end
-        else
-            neuronstatus.lfTimer = false
-        end
-    else
-        neuronstatus.lfTimer = false
-    end
-
-    if neuronstatus.lfTimer == true then
-        -- start timer
-        if neuronstatus.lfTimerStart == nil then neuronstatus.lfTimerStart = os.time() end
-    else
-        neuronstatus.lfTimerStart = nil
-    end
-
-    if neuronstatus.lfTimerStart ~= nil then
-        -- only announce if we have been on for 5 seconds or more
-        if (tonumber(os.clock()) - tonumber(neuronstatus.lfAudioAlertCounter)) >= neuronstatus.alertintParam then
-            neuronstatus.lfAudioAlertCounter = os.clock()
-
-            system.playFile(widgetDir .. "sounds/alerts/lowfuel.wav")
-
-            if alrthptParam == true then system.playHaptic("- . -") end
-
-        end
-    else
-        -- stop timer
-        neuronstatus.lfTimerStart = nil
-    end
-
-    -- LOW VOLTAGE ALERTS
-    -- big conditional to announce neuronstatus.lvTimer if needed
-    if neuronstatus.linkUP ~= 0 then
-        if neuronstatus.idleupSwitchParam ~= nil then
-            if neuronstatus.idleupSwitchParam:state() then
-                if (neuronstatus.voltageIsLow and neuronstatus.alertonParam == 0) then
-                    neuronstatus.lvTimer = true
-                elseif (neuronstatus.voltageIsLow and neuronstatus.alertonParam == 2) then
-                    neuronstatus.lvTimer = true
-                else
-                    neuronstatus.lvTimer = false
-                end
-            else
-                neuronstatus.lvTimer = false
-            end
-        else
-            neuronstatus.lvTimer = false
-        end
-    else
-        neuronstatus.lvTimer = false
-    end
-
-    if neuronstatus.lvTimer == true then
-        -- start timer
-        if neuronstatus.lvTimerStart == nil then neuronstatus.lvTimerStart = os.time() end
-    else
-        neuronstatus.lvTimerStart = nil
-    end
-
-    if neuronstatus.lvTimerStart ~= nil then
-        if (os.time() - neuronstatus.lvTimerStart >= neuronstatus.sagParam) then
-            -- only announce if we have been on for 5 seconds or more
-            if (tonumber(os.clock()) - tonumber(neuronstatus.lvAudioAlertCounter)) >= neuronstatus.alertintParam then
-                neuronstatus.lvAudioAlertCounter = os.clock()
-
-                system.playFile(widgetDir .. "sounds/alerts/lowvoltage.wav")
-                if alrthptParam == true then system.playHaptic("- . -") end
-
-            end
-        end
-    else
-        -- stop timer
-        neuronstatus.lvTimerStart = nil
-    end
+	-- moved from here
 
 end
 
@@ -3121,6 +3009,122 @@ function neuronstatus.wakeupUI(widget)
 
             -- timer alarm
             neuronstatus.playTIMERALARM(widget)
+
+			--
+			-- TIME		
+
+			if neuronstatus.linkUP ~= 0 then
+				if neuronstatus.armSwitchParam ~= nil then
+					if neuronstatus.armSwitchParam:state() == false then
+						neuronstatus.stopTimer = true
+						stopTIME = os.clock()
+						timerNearlyActive = 1
+						theTIME = 0
+					end
+				end
+
+				if neuronstatus.idleupSwitchParam ~= nil then
+					if neuronstatus.idleupSwitchParam:state() then
+						if timerNearlyActive == 1 then
+							timerNearlyActive = 0
+							startTIME = os.clock()
+						end
+						if startTIME ~= nil then theTIME = os.clock() - startTIME end
+					end
+				end
+
+			end
+
+			-- LOW FUEL ALERTS
+			-- big conditional to announce neuronstatus.lfTimer if needed
+
+			if neuronstatus.linkUP ~= 0 then
+				if neuronstatus.idleupSwitchParam ~= nil then
+					if neuronstatus.idleupSwitchParam:state() then
+						if (neuronstatus.sensors.fuel <= neuronstatus.lowfuelParam and neuronstatus.alertonParam == 1) then
+							neuronstatus.lfTimer = true
+						elseif (neuronstatus.sensors.fuel <= neuronstatus.lowfuelParam and neuronstatus.alertonParam == 2) then
+							neuronstatus.lfTimer = true
+						else
+							neuronstatus.lfTimer = false
+						end
+					else
+						neuronstatus.lfTimer = false
+					end
+				else
+					neuronstatus.lfTimer = false
+				end
+			else
+				neuronstatus.lfTimer = false
+			end
+
+			if neuronstatus.lfTimer == true then
+				-- start timer
+				if neuronstatus.lfTimerStart == nil then neuronstatus.lfTimerStart = os.time() end
+			else
+				neuronstatus.lfTimerStart = nil
+			end
+
+			if neuronstatus.lfTimerStart ~= nil then
+				-- only announce if we have been on for 5 seconds or more
+				if (tonumber(os.clock()) - tonumber(neuronstatus.lfAudioAlertCounter)) >= neuronstatus.alertintParam then
+					neuronstatus.lfAudioAlertCounter = os.clock()
+
+					system.playFile(widgetDir .. "sounds/alerts/lowfuel.wav")
+
+					if alrthptParam == true then system.playHaptic("- . -") end
+
+				end
+			else
+				-- stop timer
+				neuronstatus.lfTimerStart = nil
+			end
+
+			-- LOW VOLTAGE ALERTS
+			-- big conditional to announce neuronstatus.lvTimer if needed
+			if neuronstatus.linkUP ~= 0 then
+				if neuronstatus.idleupSwitchParam ~= nil then
+					if neuronstatus.idleupSwitchParam:state() then
+						if (neuronstatus.voltageIsLow and neuronstatus.alertonParam == 0) then
+							neuronstatus.lvTimer = true
+						elseif (neuronstatus.voltageIsLow and neuronstatus.alertonParam == 2) then
+							neuronstatus.lvTimer = true
+						else
+							neuronstatus.lvTimer = false
+						end
+					else
+						neuronstatus.lvTimer = false
+					end
+				else
+					neuronstatus.lvTimer = false
+				end
+			else
+				neuronstatus.lvTimer = false
+			end
+
+			if neuronstatus.lvTimer == true then
+				-- start timer
+				if neuronstatus.lvTimerStart == nil then neuronstatus.lvTimerStart = os.time() end
+			else
+				neuronstatus.lvTimerStart = nil
+			end
+
+			if neuronstatus.lvTimerStart ~= nil then
+				if (os.time() - neuronstatus.lvTimerStart >= neuronstatus.sagParam) then
+					-- only announce if we have been on for 5 seconds or more
+					if (tonumber(os.clock()) - tonumber(neuronstatus.lvAudioAlertCounter)) >= neuronstatus.alertintParam then
+						neuronstatus.lvAudioAlertCounter = os.clock()
+
+						system.playFile(widgetDir .. "sounds/alerts/lowvoltage.wav")
+						if alrthptParam == true then system.playHaptic("- . -") end
+
+					end
+				end
+			else
+				-- stop timer
+				neuronstatus.lvTimerStart = nil
+			end
+			--
 
         else
             adjJUSTUP = true
