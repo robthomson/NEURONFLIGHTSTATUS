@@ -2,11 +2,9 @@ local config = {}
 config.widgetName = "Neuron Flight Status"
 config.widgetKey = "zxkss"
 config.widgetDir = "/scripts/neuronstatus/"
-config.useCompiler = true
 
-compile = assert(loadfile(config.widgetDir .. "compile.lua"))(config)
 
-neuronstatus = assert(compile.loadScript(config.widgetDir .. "neuronstatus.lua"))(config, compile)
+neuronstatus = assert(config.widgetDir .. "neuronstatus.lua")(config)
 
 local function paint()
     return neuronstatus.paint()
