@@ -4,7 +4,7 @@ config.widgetKey = "zxkss"
 config.widgetDir = "/scripts/neuronstatus/"
 
 
-neuronstatus = assert(config.widgetDir .. "neuronstatus.lua")(config)
+neuronstatus = assert(loadfile("neuronstatus.lua"))(config)
 
 local function paint()
     return neuronstatus.paint()

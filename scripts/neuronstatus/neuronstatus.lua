@@ -161,6 +161,22 @@ neuronstatus.layoutBox6Param = 6 -- RPM
 neuronstatus.armState = false
 neuronstatus.idleState = false
 
+
+function neuronstatus.ethosVersion()
+    local environment = system.getVersion()
+    v = tonumber(environment.major .. environment.minor .. environment.revision)
+    if environment.revision == 0 then
+        v = v * 10
+    end
+    return v
+end
+
+function neuronstatus.ethosVersionToMinor()
+    local environment = system.getVersion()
+    local v = tonumber(environment.major .. environment.minor)
+    return v
+end
+
 function neuronstatus.create(widget)
     neuronstatus.gfx_model = lcd.loadBitmap(model.bitmap())
     neuronstatus.gfx_default = lcd.loadBitmap(widgetDir .. "gfx/default.png")
@@ -783,10 +799,10 @@ function neuronstatus.telemetryBox(x, y, w, h, title, value, unit, smallbox, ala
         lcd.color(lcd.RGB(240, 240, 240))
     end
 
-    -- draw box backgneuronstatus.round	
+    -- draw box backgneuronstatus.round    
     lcd.drawFilledRectangle(x, y, w, h)
 
-    -- color	
+    -- color    
     if isDARKMODE then
         lcd.color(lcd.RGB(255, 255, 255, 1))
     else
@@ -961,8 +977,8 @@ function neuronstatus.logsBOX()
     lcd.color(lcd.RGB(255, 255, 255))
 
     --[[ header column format 
-		TIME VOLTAGE AMPS RPM LQ MCU ESC
-	]] --
+        TIME VOLTAGE AMPS RPM LQ MCU ESC
+    ]] --
     colW = boxW / 7
 
     col1x = boxTx
@@ -1041,11 +1057,11 @@ function neuronstatus.logsBOX()
                     local rowData = neuronstatus.explode(value, ",")
 
                     --[[ rowData is a csv string as follows
-				
-						theTIME,neuronstatus.sensorVoltageMin,neuronstatus.sensorVoltageMax,neuronstatus.sensorFuelMin,neuronstatus.sensorFuelMax,
-						neuronstatus.sensorRPMMin,neuronstatus.sensorRPMMax,neuronstatus.sensorCurrentMin,neuronstatus.sensorCurrentMax,neuronstatus.sensorRSSIMin,
-						neuronstatus.sensorRSSIMax,sensorTempMCUMin,sensorTempMCUMax,neuronstatus.sensorTempESCMin,neuronstatus.sensorTempESCMax	
-				]] --
+                
+                        theTIME,neuronstatus.sensorVoltageMin,neuronstatus.sensorVoltageMax,neuronstatus.sensorFuelMin,neuronstatus.sensorFuelMax,
+                        neuronstatus.sensorRPMMin,neuronstatus.sensorRPMMax,neuronstatus.sensorCurrentMin,neuronstatus.sensorCurrentMax,neuronstatus.sensorRSSIMin,
+                        neuronstatus.sensorRSSIMax,sensorTempMCUMin,sensorTempMCUMax,neuronstatus.sensorTempESCMin,neuronstatus.sensorTempESCMax    
+                ]] --
                     -- loop of rowData and extract each value bases on idx
                     if rowData ~= nil then
 
@@ -1106,7 +1122,7 @@ function neuronstatus.logsBOX()
                                     lcd.drawText(col6x + (theme.logsCOL6w / 2) - (tsizeW / 2), boxTy + tsizeH / 2 + (boxTh * 2) + rowH, str)
                                 end
                             end
-                            -- end loop of each storage line		
+                            -- end loop of each storage line        
                         end
                         c = c + 1
 
@@ -1137,7 +1153,7 @@ function neuronstatus.telemetryBoxImage(x, y, w, h, gfx)
         lcd.color(lcd.RGB(240, 240, 240))
     end
 
-    -- draw box backgneuronstatus.round	
+    -- draw box backgneuronstatus.round    
     lcd.drawFilledRectangle(x, y, w, h)
 
     lcd.drawBitmap(x, y, gfx, w - theme.colSpacing, h - theme.colSpacing)
@@ -1869,7 +1885,7 @@ function neuronstatus.paint(widget)
 
     end
 
-	-- moved from here
+    -- moved from here
 
 end
 
@@ -1918,7 +1934,7 @@ function neuronstatus.getSensors()
 
         local telemetrySOURCE = system.getSource("Rx RSSI1")
 
-        -- we are run sport	
+        -- we are run sport    
         -- set sources for everthing below
         -- print("SPORT")
 
@@ -2146,9 +2162,9 @@ function neuronstatus.sensorsMAXMIN(sensors)
                     neuronstatus.sensorCurrentMin = sensors.current
                     if neuronstatus.sensorCurrentMin == 0 then neuronstatus.sensorCurrentMin = 1 end
                 end
-                if nsensors.current > neuronstatus.sensorCurrentMax then neuronstatus.sensorCurrentMax = sensors.current end
-                if nsensors.rssi < neuronstatus.sensorRSSIMin then neuronstatus.sensorRSSIMin = sensors.rssi end
-                if nsensors.rssi > neuronstatus.sensorRSSIMax then neuronstatus.sensorRSSIMax = sensors.rssi end
+                if sensors.current > neuronstatus.sensorCurrentMax then neuronstatus.sensorCurrentMax = sensors.current end
+                if sensors.rssi < neuronstatus.sensorRSSIMin then neuronstatus.sensorRSSIMin = sensors.rssi end
+                if sensors.rssi > neuronstatus.sensorRSSIMax then neuronstatus.sensorRSSIMax = sensors.rssi end
                 if sensors.temp_esc < neuronstatus.sensorTempESCMin then neuronstatus.sensorTempESCMin = temp_esc end
                 if sensors.temp_esc > neuronstatus.sensorTempESCMax then neuronstatus.sensorTempESCMax = sensors.temp_esc end
                 neuronstatus.motorWasActive = true
@@ -2621,7 +2637,11 @@ function neuronstatus.playLQ(widget)
                         neuronstatus.lqannounceTimerStart = os.time()
                         neuronstatus.lqaudioannounceCounter = os.clock()
                         -- print ("Play LQ Alert (first)")
-                        system.playFile(widgetDir .. "sounds/alerts/lq.wav")
+                        if neuronstatus.ethosVersionToMinor() < 16 then
+                            system.playFile(widgetDir .. "sounds/alerts/lq.wav")
+                        else
+                            system.playFile("sounds/alerts/lq.wav")
+                        end
                         system.playNumber(neuronstatus.sensors.rssi, UNIT_PERCENT, 2)
                         lqDoneFirst = true
                     end
@@ -2634,7 +2654,11 @@ function neuronstatus.playLQ(widget)
                         if ((tonumber(os.clock()) - tonumber(neuronstatus.lqaudioannounceCounter)) >= neuronstatus.announceIntervalParam) then
                             neuronstatus.lqaudioannounceCounter = os.clock()
                             -- print ("Play LQ Alert (repeat)")
-                            system.playFile(widgetDir .. "sounds/alerts/lq.wav")
+                            if neuronstatus.ethosVersionToMinor() < 16 then
+                                system.playFile(widgetDir .. "sounds/alerts/lq.wav")
+                            else
+                                system.playFile("sounds/alerts/lq.wav")
+                            end
                             system.playNumber(neuronstatus.sensors.rssi, UNIT_PERCENT, 2)
                         end
                     end
@@ -2665,7 +2689,11 @@ function neuronstatus.playESC(widget)
                         neuronstatus.escannounceTimerStart = os.time()
                         neuronstatus.escaudioannounceCounter = os.clock()
                         -- print ("Playing ESC (first)")
-                        system.playFile(widgetDir .. "sounds/alerts/esc.wav")
+                        if neuronstatus.ethosVersionToMinor() < 16 then
+                            system.playFile(widgetDir .. "sounds/alerts/esc.wav")
+                        else
+                            system.playFile("sounds/alerts/esc.wav") 
+                        end    
                         system.playNumber(neuronstatus.sensors.temp_esc / 100, UNIT_DEGREE, 2)
                         escDoneFirst = true
                     end
@@ -2678,7 +2706,11 @@ function neuronstatus.playESC(widget)
                         if ((tonumber(os.clock()) - tonumber(neuronstatus.escaudioannounceCounter)) >= neuronstatus.announceIntervalParam) then
                             neuronstatus.escaudioannounceCounter = os.clock()
                             -- print ("Playing ESC (repeat)")
-                            system.playFile(widgetDir .. "sounds/alerts/esc.wav")
+                            if neuronstatus.ethosVersionToMinor() < 16 then
+                                system.playFile(widgetDir .. "sounds/alerts/esc.wav")
+                            else
+                                system.playFile("sounds/alerts/esc.wav")
+                            end
                             system.playNumber(neuronstatus.sensors.temp_esc / 100, UNIT_DEGREE, 2)
                         end
                     end
@@ -2700,13 +2732,21 @@ function neuronstatus.playTIMERALARM(widget)
         if neuronstatus.timerAlarmPlay == true then
             if theTIME >= neuronstatus.timeralarmParam and theTIME <= neuronstatus.timeralarmParam + 1 then
 
-                system.playFile(widgetDir .. "sounds/alerts/beep.wav")
+                 if neuronstatus.ethosVersionToMinor() < 16 then
+                    system.playFile(widgetDir .. "sounds/alerts/beep.wav")
+                 else
+                    system.playFile("sounds/alerts/beep.wav")
+                 end
 
                 hours = string.format("%02.f", math.floor(theTIME / 3600))
                 mins = string.format("%02.f", math.floor(theTIME / 60 - (hours * 60)))
                 secs = string.format("%02.f", math.floor(theTIME - hours * 3600 - mins * 60))
 
-                system.playFile(widgetDir .. "sounds/alerts/timer.wav")
+                if neuronstatus.ethosVersionToMinor() < 16 then
+                    system.playFile(widgetDir .. "sounds/alerts/timer.wav")
+                else
+                    system.playFile("sounds/alerts/timer.wav")
+                end
                 if mins ~= "00" then system.playNumber(mins, UNIT_MINUTE, 2) end
                 system.playNumber(secs, UNIT_SECOND, 2)
 
@@ -2796,7 +2836,11 @@ function neuronstatus.playFuel(widget)
                         neuronstatus.fuelannounceTimerStart = os.time()
                         neuronstatus.fuelaudioannounceCounter = os.clock()
                         -- print("Play fuel alert (first)")
-                        system.playFile(widgetDir .. "sounds/alerts/fuel.wav")
+                        if neuronstatus.ethosVersionToMinor() < 16 then
+                            system.playFile(widgetDir .. "sounds/alerts/fuel.wav")
+                        else
+                            system.playFile("sounds/alerts/fuel.wav")
+                        end
                         system.playNumber(neuronstatus.sensors.fuel, UNIT_PERCENT, 2)
                         fuelDoneFirst = true
                     end
@@ -2809,7 +2853,11 @@ function neuronstatus.playFuel(widget)
                         if ((tonumber(os.clock()) - tonumber(neuronstatus.fuelaudioannounceCounter)) >= neuronstatus.announceIntervalParam) then
                             neuronstatus.fuelaudioannounceCounter = os.clock()
                             -- print("Play fuel alert (repeat)")
-                            system.playFile(widgetDir .. "sounds/alerts/fuel.wav")
+                            if neuronstatus.ethosVersionToMinor() < 16 then
+                                system.playFile(widgetDir .. "sounds/alerts/fuel.wav")
+                            else
+                                system.playFile("sounds/alerts/fuel.wav")
+                            end
                             system.playNumber(neuronstatus.sensors.fuel, UNIT_PERCENT, 2)
 
                         end
@@ -2882,8 +2930,7 @@ function neuronstatus.playVoltage(widget)
                     if neuronstatus.lvannounceTimerStart == nil and voltageDoneFirst == false then
                         neuronstatus.lvannounceTimerStart = os.time()
                         neuronstatus.lvaudioannounceCounter = os.clock()
-                        -- print("Play voltage alert (first)")
-                        -- system.playFile(widgetDir .. "sounds/alerts/voltage.wav")						
+                        -- print("Play voltage alert (first)")                        
                         system.playNumber(neuronstatus.sensors.voltage / 100, 2, 2)
                         voltageDoneFirst = true
                     end
@@ -2895,8 +2942,7 @@ function neuronstatus.playVoltage(widget)
                     if voltageDoneFirst == false then
                         if ((tonumber(os.clock()) - tonumber(neuronstatus.lvaudioannounceCounter)) >= neuronstatus.announceIntervalParam) then
                             neuronstatus.lvaudioannounceCounter = os.clock()
-                            -- print("Play voltage alert (repeat)")
-                            -- system.playFile(widgetDir .. "sounds/alerts/voltage.wav")								
+                            -- print("Play voltage alert (repeat)")                                
                             system.playNumber(neuronstatus.sensors.voltage / 100, 2, 2)
                         end
                     end
@@ -2974,20 +3020,36 @@ function neuronstatus.wakeupUI(widget)
     if neuronstatus.linkUP ~= 0 then
 
         if neuronstatus.armSwitchParam ~= nil and neuronstatus.armSwitchParam:state() == true and neuronstatus.armState == false then
-            system.playFile(widgetDir .. "sounds/triggers/armed.wav")
+            if neuronstatus.ethosVersionToMinor() < 16 then
+                system.playFile(widgetDir .. "sounds/triggers/armed.wav")
+            else
+                system.playFile("sounds/triggers/armed.wav")
+            end
             neuronstatus.armState = true
         end
         if neuronstatus.armSwitchParam ~= nil and neuronstatus.armSwitchParam:state() == false and neuronstatus.armState == true then
-            system.playFile(widgetDir .. "sounds/triggers/disarmed.wav")
+            if neuronstatus.ethosVersionToMinor() < 16 then
+                system.playFile(widgetDir .. "sounds/triggers/disarmed.wav")
+            else
+                system.playFile("sounds/triggers/disarmed.wav")
+            end
             neuronstatus.armState = false
         end
 
         if neuronstatus.idleupSwitchParam ~= nil and neuronstatus.idleupSwitchParam:state() == true and neuronstatus.idleState == false then
-            system.playFile(widgetDir .. "sounds/triggers/thr-active.wav")
+            if neuronstatus.ethosVersionToMinor() < 16 then
+                system.playFile(widgetDir .. "sounds/triggers/thr-active.wav")
+            else
+                system.playFile("sounds/triggers/thr-active.wav")
+            end
             neuronstatus.idleState = true
         end
         if neuronstatus.idleupSwitchParam ~= nil and neuronstatus.idleupSwitchParam:state() == false and neuronstatus.idleState == true then
-            system.playFile(widgetDir .. "sounds/triggers/thr-hold.wav")
+            if neuronstatus.ethosVersionToMinor() < 16 then
+                system.playFile(widgetDir .. "sounds/triggers/thr-hold.wav")
+            else
+                system.playFile("sounds/triggers/thr-hold.wav")
+            end
             neuronstatus.idleState = false
         end
 
@@ -3010,121 +3072,129 @@ function neuronstatus.wakeupUI(widget)
             -- timer alarm
             neuronstatus.playTIMERALARM(widget)
 
-			--
-			-- TIME		
+            --
+            -- TIME        
 
-			if neuronstatus.linkUP ~= 0 then
-				if neuronstatus.armSwitchParam ~= nil then
-					if neuronstatus.armSwitchParam:state() == false then
-						neuronstatus.stopTimer = true
-						stopTIME = os.clock()
-						timerNearlyActive = 1
-						theTIME = 0
-					end
-				end
+            if neuronstatus.linkUP ~= 0 then
+                if neuronstatus.armSwitchParam ~= nil then
+                    if neuronstatus.armSwitchParam:state() == false then
+                        neuronstatus.stopTimer = true
+                        stopTIME = os.clock()
+                        timerNearlyActive = 1
+                        theTIME = 0
+                    end
+                end
 
-				if neuronstatus.idleupSwitchParam ~= nil then
-					if neuronstatus.idleupSwitchParam:state() then
-						if timerNearlyActive == 1 then
-							timerNearlyActive = 0
-							startTIME = os.clock()
-						end
-						if startTIME ~= nil then theTIME = os.clock() - startTIME end
-					end
-				end
+                if neuronstatus.idleupSwitchParam ~= nil then
+                    if neuronstatus.idleupSwitchParam:state() then
+                        if timerNearlyActive == 1 then
+                            timerNearlyActive = 0
+                            startTIME = os.clock()
+                        end
+                        if startTIME ~= nil then theTIME = os.clock() - startTIME end
+                    end
+                end
 
-			end
+            end
 
-			-- LOW FUEL ALERTS
-			-- big conditional to announce neuronstatus.lfTimer if needed
+            -- LOW FUEL ALERTS
+            -- big conditional to announce neuronstatus.lfTimer if needed
 
-			if neuronstatus.linkUP ~= 0 then
-				if neuronstatus.idleupSwitchParam ~= nil then
-					if neuronstatus.idleupSwitchParam:state() then
-						if (neuronstatus.sensors.fuel <= neuronstatus.lowfuelParam and neuronstatus.alertonParam == 1) then
-							neuronstatus.lfTimer = true
-						elseif (neuronstatus.sensors.fuel <= neuronstatus.lowfuelParam and neuronstatus.alertonParam == 2) then
-							neuronstatus.lfTimer = true
-						else
-							neuronstatus.lfTimer = false
-						end
-					else
-						neuronstatus.lfTimer = false
-					end
-				else
-					neuronstatus.lfTimer = false
-				end
-			else
-				neuronstatus.lfTimer = false
-			end
+            if neuronstatus.linkUP ~= 0 then
+                if neuronstatus.idleupSwitchParam ~= nil then
+                    if neuronstatus.idleupSwitchParam:state() then
+                        if (neuronstatus.sensors.fuel <= neuronstatus.lowfuelParam and neuronstatus.alertonParam == 1) then
+                            neuronstatus.lfTimer = true
+                        elseif (neuronstatus.sensors.fuel <= neuronstatus.lowfuelParam and neuronstatus.alertonParam == 2) then
+                            neuronstatus.lfTimer = true
+                        else
+                            neuronstatus.lfTimer = false
+                        end
+                    else
+                        neuronstatus.lfTimer = false
+                    end
+                else
+                    neuronstatus.lfTimer = false
+                end
+            else
+                neuronstatus.lfTimer = false
+            end
 
-			if neuronstatus.lfTimer == true then
-				-- start timer
-				if neuronstatus.lfTimerStart == nil then neuronstatus.lfTimerStart = os.time() end
-			else
-				neuronstatus.lfTimerStart = nil
-			end
+            if neuronstatus.lfTimer == true then
+                -- start timer
+                if neuronstatus.lfTimerStart == nil then neuronstatus.lfTimerStart = os.time() end
+            else
+                neuronstatus.lfTimerStart = nil
+            end
 
-			if neuronstatus.lfTimerStart ~= nil then
-				-- only announce if we have been on for 5 seconds or more
-				if (tonumber(os.clock()) - tonumber(neuronstatus.lfAudioAlertCounter)) >= neuronstatus.alertintParam then
-					neuronstatus.lfAudioAlertCounter = os.clock()
+            if neuronstatus.lfTimerStart ~= nil then
+                -- only announce if we have been on for 5 seconds or more
+                if (tonumber(os.clock()) - tonumber(neuronstatus.lfAudioAlertCounter)) >= neuronstatus.alertintParam then
+                    neuronstatus.lfAudioAlertCounter = os.clock()
 
-					system.playFile(widgetDir .. "sounds/alerts/lowfuel.wav")
+                    if neuronstatus.ethosVersionToMinor() < 16 then
+                        system.playFile(widgetDir .. "sounds/alerts/lowfuel.wav")
+                    else
+                         system.playFile("sounds/alerts/lowfuel.wav")
+                    end
 
-					if alrthptParam == true then system.playHaptic("- . -") end
+                    if alrthptParam == true then system.playHaptic("- . -") end
 
-				end
-			else
-				-- stop timer
-				neuronstatus.lfTimerStart = nil
-			end
+                end
+            else
+                -- stop timer
+                neuronstatus.lfTimerStart = nil
+            end
 
-			-- LOW VOLTAGE ALERTS
-			-- big conditional to announce neuronstatus.lvTimer if needed
-			if neuronstatus.linkUP ~= 0 then
-				if neuronstatus.idleupSwitchParam ~= nil then
-					if neuronstatus.idleupSwitchParam:state() then
-						if (neuronstatus.voltageIsLow and neuronstatus.alertonParam == 0) then
-							neuronstatus.lvTimer = true
-						elseif (neuronstatus.voltageIsLow and neuronstatus.alertonParam == 2) then
-							neuronstatus.lvTimer = true
-						else
-							neuronstatus.lvTimer = false
-						end
-					else
-						neuronstatus.lvTimer = false
-					end
-				else
-					neuronstatus.lvTimer = false
-				end
-			else
-				neuronstatus.lvTimer = false
-			end
+            -- LOW VOLTAGE ALERTS
+            -- big conditional to announce neuronstatus.lvTimer if needed
+            if neuronstatus.linkUP ~= 0 then
+                if neuronstatus.idleupSwitchParam ~= nil then
+                    if neuronstatus.idleupSwitchParam:state() then
+                        if (neuronstatus.voltageIsLow and neuronstatus.alertonParam == 0) then
+                            neuronstatus.lvTimer = true
+                        elseif (neuronstatus.voltageIsLow and neuronstatus.alertonParam == 2) then
+                            neuronstatus.lvTimer = true
+                        else
+                            neuronstatus.lvTimer = false
+                        end
+                    else
+                        neuronstatus.lvTimer = false
+                    end
+                else
+                    neuronstatus.lvTimer = false
+                end
+            else
+                neuronstatus.lvTimer = false
+            end
 
-			if neuronstatus.lvTimer == true then
-				-- start timer
-				if neuronstatus.lvTimerStart == nil then neuronstatus.lvTimerStart = os.time() end
-			else
-				neuronstatus.lvTimerStart = nil
-			end
+            if neuronstatus.lvTimer == true then
+                -- start timer
+                if neuronstatus.lvTimerStart == nil then neuronstatus.lvTimerStart = os.time() end
+            else
+                neuronstatus.lvTimerStart = nil
+            end
 
-			if neuronstatus.lvTimerStart ~= nil then
-				if (os.time() - neuronstatus.lvTimerStart >= neuronstatus.sagParam) then
-					-- only announce if we have been on for 5 seconds or more
-					if (tonumber(os.clock()) - tonumber(neuronstatus.lvAudioAlertCounter)) >= neuronstatus.alertintParam then
-						neuronstatus.lvAudioAlertCounter = os.clock()
+            if neuronstatus.lvTimerStart ~= nil then
+                if (os.time() - neuronstatus.lvTimerStart >= neuronstatus.sagParam) then
+                    -- only announce if we have been on for 5 seconds or more
+                    if (tonumber(os.clock()) - tonumber(neuronstatus.lvAudioAlertCounter)) >= neuronstatus.alertintParam then
+                        neuronstatus.lvAudioAlertCounter = os.clock()
 
-						system.playFile(widgetDir .. "sounds/alerts/lowvoltage.wav")
-						if alrthptParam == true then system.playHaptic("- . -") end
+                        if neuronstatus.ethosVersionToMinor() < 16 then
+                            system.playFile(widgetDir .. "sounds/alerts/lowvoltage.wav")
+                        else
+                            system.playFile("sounds/alerts/lowvoltage.wav")
+                        end
+                        if alrthptParam == true then system.playHaptic("- . -") end
 
-					end
-				end
-			else
-				-- stop timer
-				neuronstatus.lvTimerStart = nil
-			end
-			--
+                    end
+                end
+            else
+                -- stop timer
+                neuronstatus.lvTimerStart = nil
+            end
+            --
 
         else
             adjJUSTUP = true
